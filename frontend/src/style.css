@@ -1,0 +1,31 @@
+body {
+  background: gray;
+}
+
+.mycontent {
+    height: 100vh;
+}
+  
+.title {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+  
+.toolbar {
+    margin-bottom: 20px;
+}
+  
+.btnBlock {
+    padding: 20px 0;
+}
+  
+.btnTable {
+    margin-right: 10px;
+}
+
+.btnTable img {
+    height: 20px;
+}
+
+
+  
