@@ -28,4 +28,21 @@ body {
 }
 
 
+.cardsBlock {
+    margin-top: 20px;
+    padding: 10px 0;
+}
+
+.itemCard {
+    margin-top: 20px;
+    padding: 5px;
+    width: 300px; 
+    height: 600px;
+}
+
+.itemCard img {
+    width: 200px;
+    height: 320px;
+    border-radius: 5px;
+}
   
