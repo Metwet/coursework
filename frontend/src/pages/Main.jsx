@@ -59,7 +59,7 @@ const Main = ()=> {
                             <h5 className="card-title">Title: {data.title}</h5>
                             <p className="card-text">Description: {data.description}</p>
                         </div>                  
-                    ))}
+                    )).reverse()}
                 </div>
             </div>
         </div>
