@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import Table from "./pages/Table";
 import "./style.css";
 import { useState } from "react";
+import Collections from "./pages/Collections";
 
 function App() {
 
@@ -25,7 +26,8 @@ function App() {
     <div className="App">
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Main/>}/>
+                <Route path="/" element={<Collections/>}/>
+                <Route path="/main" element={<Main/>}/>
                 <Route path="/signup" element={<Signup/>}/>
                 <Route path="/login" element={<Login updateToken={updateToken}/>}/>
                 <Route path="/table" element={<Table movedToken={movedToken}/>}/>

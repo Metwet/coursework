@@ -7,44 +7,49 @@ import noPoster from "../img/noposter.png";
 import logoDelete from "../img/delete.svg";
 
 
-const Main = ()=> {
+const Collections = ()=> {
     const [data, setData] = useState([])
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [theme, setTheme] = useState('1');
 
     useEffect(()=>{
         const fetchAllData = async ()=>{
             try {
-                const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/`)
+                const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/collections`)
                 setData(res.data);
             } catch(err) {
                 console.log(err);
             }
         }
         fetchAllData();
-
     }, []);
   
     const handleSubmit = (event) => {
         event.preventDefault();
-        axios.post(`${process.env.REACT_APP_API_BASE_URL}/`, { title, description }).then(response => {
+        axios.post(`${process.env.REACT_APP_API_BASE_URL}/collections`, { title, description, theme }).then(response => {
             console.log(response.data);
-            window.location.reload();
+            //window.location.reload();
         }).catch(error => {
             console.log(error);
         });
     };
 
     const handleDelete = (data)=>{ 
-        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/`+data.id);     
-        window.location.reload()
+        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/collections/`+data.id);   
+        console.log(data) 
+        //window.location.reload()
+    }
+
+    const handleChange = (data)=>{
+        console.log("in process")
     }
 
     return (
         <div>
             <div className="container ">
-                <h1>Create a new item</h1>
+                <h1>Create a new collection</h1>
                 <form onSubmit={handleSubmit}>
                     <label className="form-label">
                         Title:
@@ -56,21 +61,31 @@ const Main = ()=> {
                         <textarea className="form-control" value={description} onChange={event => setDescription(event.target.value)} />
                     </label>
                     <br />
+                    <label>
+                        Theme:
+                        <select className="form-select" value={theme} onChange={(event) => setTheme(event.target.value)}>
+                            <option value={1}>Books</option>
+                            <option value={2}>Films</option>
+                            <option value={3}>Songs</option>
+                        </select>
+                    </label>
+                    <br />
                     <div className="btnBlock">
                         <button className="btn btn-primary" type="submit">add</button>
-                    </div>
+                    </div>                  
                 </form>
-                <div className="cardsBlock">
-                    {data.map((data)=>(
+                <div className="collectionsBlock">
+                    {data && data.map((data)=>(
                         <div className="card itemCard d-flex justify-content-center align-items-center" key={data.id}>
                             <div className="posterCard">
                                 <img src={noPoster} className="card-img-top" alt="poster"></img>
                             </div>
-                            <h5 className="card-title">Title: {data.title}</h5>
+                            <h5 className="card-title">Title: {data.name}</h5>
                             <p className="card-text">Description: {data.description}</p>
+                            <p className="card-text">Theme: {data.theme}</p>
                             <div className="buttonCard">
                                 <button type="button" className="btn btn-danger btnTable" onClick={()=>handleDelete(data)}><img src={logoDelete}></img></button>
-                                <button type="button" className="btn btn-warning btnTable" onClick={()=>handleDelete(data)}><img src={logoDelete}></img></button>
+                                <button type="button" className="btn btn-warning btnTable" onClick={()=>handleChange(data)}>change</button>
                             </div>
                         </div>                  
                     )).reverse()}
@@ -80,4 +95,4 @@ const Main = ()=> {
     )
 }
 
-export default Main
+export default Collections
