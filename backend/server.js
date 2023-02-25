@@ -65,7 +65,6 @@ app.delete("/:id", (req, res)=>{
 // CRUD collections
 
 app.get("/collections", (req, res)=> {
-    //const q = "SELECT * FROM collections"
     const q = `SELECT collections.id, collections.name, collections.description, themes.theme 
     FROM collections
     INNER JOIN themes ON collections.theme_id = themes.id;`
@@ -75,7 +74,24 @@ app.get("/collections", (req, res)=> {
     })
 })
 
-  app.post("/collections", (request, response)=> {
+app.get('/collections/:id', (req, res) => {
+    const id = req.params.id;
+    const query = `SELECT collections.id, collections.name, collections.description, collections.theme_id, themes.theme 
+    FROM collections
+    INNER JOIN themes ON collections.theme_id = themes.id
+    WHERE collections.id = ${id};`
+  
+    connection.query(query, (error, results, fields) => {
+      if (error) {
+        console.log(error);
+        res.status(500).send('Error retrieving data from database');
+        return;
+      }
+      res.send(results[0]);
+    });
+  });
+
+app.post("/collections", (request, response)=> {
     if(!request.body) return response.sendStatus(400);
     console.log(request.body);
     try {
@@ -99,3 +115,17 @@ app.delete("/collections/:id", (req, res)=>{
         return res.json("Row has been deleted successfully!");
     });
 })
+
+app.put('/collections/:id', (req, res) => {
+    const id = req.params.id;
+    const { name, description, theme } = req.body;
+    const q = `UPDATE collections SET name=?, description=?, theme_id=? WHERE id=?`;
+  
+    connection.query(q, [name, description, theme, id], (err, result) => {
+      if (err) {
+        return res.status(400).json(err);
+      }
+  
+      return res.status(200).json({ message: `Collection with id ${id} has been updated successfully.` });
+    });
+});

@@ -5,6 +5,8 @@ import {useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import noPoster from "../img/noposter.png";
 import logoDelete from "../img/delete.svg";
+import logoChande from "../img/wheel.svg";
+import { Link } from 'react-router-dom';
 
 
 const Collections = ()=> {
@@ -25,26 +27,16 @@ const Collections = ()=> {
         }
         fetchAllData();
     }, []);
-  
+    
     const handleSubmit = (event) => {
         event.preventDefault();
         axios.post(`${process.env.REACT_APP_API_BASE_URL}/collections`, { title, description, theme }).then(response => {
             console.log(response.data);
-            //window.location.reload();
+            window.location.reload();
         }).catch(error => {
             console.log(error);
         });
     };
-
-    const handleDelete = (data)=>{ 
-        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/collections/`+data.id);   
-        console.log(data) 
-        //window.location.reload()
-    }
-
-    const handleChange = (data)=>{
-        console.log("in process")
-    }
 
     return (
         <div>
@@ -80,13 +72,11 @@ const Collections = ()=> {
                             <div className="posterCard">
                                 <img src={noPoster} className="card-img-top" alt="poster"></img>
                             </div>
-                            <h5 className="card-title">Title: {data.name}</h5>
+                            <Link to={`/collection/${data.id}`}>
+                                <h5 className="card-title">Title: {data.name}</h5>
+                            </Link>
                             <p className="card-text">Description: {data.description}</p>
                             <p className="card-text">Theme: {data.theme}</p>
-                            <div className="buttonCard">
-                                <button type="button" className="btn btn-danger btnTable" onClick={()=>handleDelete(data)}><img src={logoDelete}></img></button>
-                                <button type="button" className="btn btn-warning btnTable" onClick={()=>handleChange(data)}>change</button>
-                            </div>
                         </div>                  
                     )).reverse()}
                 </div>
