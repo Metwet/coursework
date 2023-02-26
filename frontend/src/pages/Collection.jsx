@@ -26,28 +26,29 @@ const Collection = ()=> {
 
     const [items, setItems] = useState([]);
 
-    useEffect(()=>{
-        const fetchAllData = async ()=>{
-            try {
-                const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/collections/${id}`)
-                setData(res.data);
-                setName(res.data.name);
-                setDescription(res.data.description);
-                setTheme(res.data.theme_id);
-            } catch(err) {
-                console.log(err);
-            }
+    const fetchCollection = async ()=>{
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/collections/${id}`)
+            setData(res.data);
+            setName(res.data.name);
+            setDescription(res.data.description);
+            setTheme(res.data.theme_id);
+        } catch(err) {
+            console.log(err);
         }
-        fetchAllData();
+    }
 
-        const fetchAllItems = async ()=>{
-            try {
-                const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/items`)
-                setItems(res.data);
-            } catch(err) {
-                console.log(err);
-            }
+    const fetchAllItems = async ()=>{
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/items`)
+            setItems(res.data);
+        } catch(err) {
+            console.log(err);
         }
+    }
+
+    useEffect(()=>{    
+        fetchCollection();
         fetchAllItems();
     }, []);
 
@@ -73,7 +74,7 @@ const Collection = ()=> {
         axios.put(`${process.env.REACT_APP_API_BASE_URL}/collections/${id}`, { name, description, theme })
           .then(() => {
             setIsEditing(false);
-            window.location.reload()
+            fetchCollection();
           })
           .catch((err) => {
             console.log(err);
