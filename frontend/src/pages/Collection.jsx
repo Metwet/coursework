@@ -85,7 +85,7 @@ const Collection = ()=> {
         event.preventDefault();
         axios.post(`${process.env.REACT_APP_API_BASE_URL}/items`, { title, descriptionItem }).then(response => {
             console.log(response.data);
-            window.location.reload();
+            fetchAllItems();
         }).catch(error => {
             console.log(error);
         });
