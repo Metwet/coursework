@@ -37,7 +37,7 @@ app.get("/", (req, res)=> {
     })
 })
 
-  app.post("/", (request, response)=> {
+app.post("/", (request, response)=> {
     if(!request.body) return response.sendStatus(400);
     try {
         const q = `INSERT INTO items (title, description) VALUES('${request.body.title}', '${request.body.description}')`;
@@ -128,4 +128,29 @@ app.put('/collections/:id', (req, res) => {
   
       return res.status(200).json({ message: `Collection with id ${id} has been updated successfully.` });
     });
+});
+
+// CRUD items
+
+app.get("/items", (req, res)=> {
+    const q = `SELECT * FROM items;`
+    connection.query(q, (err,data)=>{
+        if(err) return res.json(err)
+        return res.json(data)
+    })
+})
+
+app.post("/items", (request, response)=> {
+    if(!request.body) return response.sendStatus(400);
+    try {
+        const q = `INSERT INTO items (title, description) VALUES('${request.body.title}', '${request.body.descriptionItem}')`;
+        connection.query(q, (err, results)=>{
+            if(err) return results.json(err);
+        });
+        response.json({message: 'Данные отправлены'})
+    } catch (error) {
+        console.log(error);
+        response.status(500).json({ message: 'Ошибка сервера' });
+    }
+    
 });

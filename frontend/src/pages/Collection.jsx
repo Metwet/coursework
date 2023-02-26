@@ -19,6 +19,11 @@ const Collection = ()=> {
     const [description, setDescription] = useState('');
     const [theme, setTheme] = useState('1');
 
+    const [title, setTitle] = useState('');
+    const [descriptionItem, setDescriptionItem] = useState('');
+
+    const [items, setItems] = useState([]);
+
     useEffect(()=>{
         const fetchAllData = async ()=>{
             try {
@@ -32,6 +37,16 @@ const Collection = ()=> {
             }
         }
         fetchAllData();
+
+        const fetchAllItems = async ()=>{
+            try {
+                const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/items`)
+                setItems(res.data);
+            } catch(err) {
+                console.log(err);
+            }
+        }
+        fetchAllItems();
     }, []);
 
 
@@ -61,6 +76,16 @@ const Collection = ()=> {
           .catch((err) => {
             console.log(err);
           });
+    };
+
+    const handleCreateItem = (event) => {
+        event.preventDefault();
+        axios.post(`${process.env.REACT_APP_API_BASE_URL}/items`, { title, descriptionItem }).then(response => {
+            console.log(response.data);
+            window.location.reload();
+        }).catch(error => {
+            console.log(error);
+        });
     };
 
     if (isEditing) {
@@ -96,9 +121,42 @@ const Collection = ()=> {
                 <h1>Collection "{data.name}"</h1>
                 <p>{data.description}</p>
                 <p className="text">Theme: {data.theme}</p>
-                <div className="buttonCard">
+                <div className="btnBlock">
                     <button type="button" className="btn btn-danger btnTable" onClick={()=>handleDelete(data)}><img src={logoDelete}></img></button>
                     <button type="button" className="btn btn-warning btnTable" onClick={()=>handleChange(data)}><img src={logoChande}></img></button>
+                </div>
+                <div className="itemsBlock">
+                    <div className= "row">
+                        <div className = "col-6">
+                        {items.map((item)=>(
+                            <div className="card itemCard d-flex justify-content-center align-items-center" key={item.id}>
+                                {/* <Link to={`/item/${item.id}`}>
+                                    <h5 className="card-title">Title: {item.title}</h5>
+                                </Link> */}
+                                <h5 className="card-title">Title: {item.title}</h5>
+                                <p className="card-text">Description: {item.description}</p>
+                            </div>
+                        )).reverse()}
+                        </div>
+                        <div className = "col-6">
+                            <h1>Create a new item</h1>
+                            <form onSubmit={handleCreateItem}>
+                                <label className="form-label">
+                                    Title:
+                                    <input className="form-control" type="text" value={title} onChange={event => setTitle(event.target.value)} />
+                                </label>
+                                <br />
+                                <label className="form-label">
+                                    Description:
+                                    <textarea className="form-control" value={descriptionItem} onChange={event => setDescriptionItem(event.target.value)} />
+                                </label>
+                                <br />
+                                <div className="btnBlock">
+                                    <button className="btn btn-primary" type="submit">add</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         )

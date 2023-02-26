@@ -15,13 +15,9 @@ import "./style.css";
 import { useState } from "react";
 import Collections from "./pages/Collections";
 import Collection from "./pages/Collection";
+import Item from "./pages/Item";
 
 function App() {
-
-  const [movedToken, setToken] = useState('netoken');
-  const updateToken  = (value)=>{
-      setToken(value);
-  }
 
   return (
     <div className="App">
@@ -29,6 +25,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Collections/>}/>
                 <Route path="/collection/:id" element={<Collection/>}/>
+                <Route path="/item/:id" element={<Item/>}/>
                 <Route path="/main" element={<Main/>}/>
                 <Route path="/signup" element={<Signup/>}/>
                 <Route path="/login" element={<Login/>}/>
