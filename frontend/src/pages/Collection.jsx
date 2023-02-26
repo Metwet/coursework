@@ -7,6 +7,8 @@ import noPoster from "../img/noposter.png";
 import logoDelete from "../img/delete.svg";
 import logoChande from "../img/wheel.svg";
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
 
 
 const Collection = ()=> {
@@ -130,9 +132,9 @@ const Collection = ()=> {
                         <div className = "col-6">
                         {items.map((item)=>(
                             <div className="card itemCard d-flex justify-content-center align-items-center" key={item.id}>
-                                {/* <Link to={`/item/${item.id}`}>
+                                <Link to={`/item/${item.id}`}>
                                     <h5 className="card-title">Title: {item.title}</h5>
-                                </Link> */}
+                                </Link>
                                 <h5 className="card-title">Title: {item.title}</h5>
                                 <p className="card-text">Description: {item.description}</p>
                             </div>
