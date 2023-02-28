@@ -88,7 +88,7 @@ const Collections = ()=> {
                             </label>
                             <br />
                             <div className="btnBlock">
-                                <button className="btn btn-success" type="submit">add</button>
+                                <button className="btn btn-success mybtn" type="submit">add</button>
                             </div>                  
                         </form>
                     </div>

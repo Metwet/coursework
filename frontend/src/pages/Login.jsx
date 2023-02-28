@@ -57,8 +57,8 @@ const Login = ()=> {
                     </div>
                     <div className="row btnBlock align-items-center">
                         <div className="col">
-                            <button type="submit" className="btn btn-primary btnTable" onClick={handelClick}>log in</button>
-                            <button className="btn btn-secondary" onClick={()=>{navigate("/signup")}}>sign up</button>
+                            <button type="submit" className="btn btn-primary mybtn" onClick={handelClick}>log in</button>
+                            <button className="btn btn-secondary mybtn" onClick={()=>{navigate("/signup")}}>sign up</button>
                         </div>
                     </div>
                     <div className="row">

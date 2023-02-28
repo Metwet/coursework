@@ -73,7 +73,7 @@ const Signup = ()=> {
                     <div className="row btnBlock align-items-center">
                         <div className="col">
                             <button type="submit" className="btn btn-primary mybtn" onClick={handelClick}>sign up</button>
-                            <button className="btn btn-secondary mybtn" onClick={()=>{navigate("/signup")}}>log in</button>
+                            <button className="btn btn-secondary mybtn" onClick={()=>{navigate("/login")}}>log in</button>
                         </div>
                     </div>
                 </form>

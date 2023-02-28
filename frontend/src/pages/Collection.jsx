@@ -117,8 +117,8 @@ const Collection = ()=> {
                     </select>
                 </label>
                 <div className="btnBlock">
-                    <button className="btn btn-success btnTable" onClick={handleSave}>Save</button>
-                    <button className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
+                    <button className="btn btn-success mybtn" onClick={handleSave}>Save</button>
+                    <button className="btn btn-secondary mybtn" onClick={handleCancel}>Cancel</button>
                 </div>
             </div>
         );
@@ -141,8 +141,8 @@ const Collection = ()=> {
                             <p>{data.description}</p>
                             <p className="text">Theme: {data.theme}</p>
                             <div className="btnBlock">
-                                <button type="button" className="btn btn-danger btnTable" onClick={()=>handleDelete(data)}><img src={logoDelete}></img></button>
-                                <button type="button" className="btn btn-warning btnTable" onClick={()=>handleChange(data)}><img src={logoChande}></img></button>
+                                <button type="button" className="btn btn-danger mybtn" onClick={()=>handleDelete(data)}><img src={logoDelete}></img></button>
+                                <button type="button" className="btn btn-warning mybtn" onClick={()=>handleChange(data)}><img src={logoChande}></img></button>
                             </div>
                         </div>
                     </div>
@@ -174,7 +174,7 @@ const Collection = ()=> {
                                     </label>
                                     <br />
                                     <div className="btnBlock">
-                                        <button className="btn btn-success" type="submit">add</button>
+                                        <button className="btn btn-success mybtn" type="submit">add</button>
                                     </div>
                                 </form>
                             </div>

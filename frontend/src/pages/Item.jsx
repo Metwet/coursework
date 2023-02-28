@@ -77,8 +77,8 @@ const Item = ()=> {
                 </label>
                 <br />
                 <div className="btnBlock">
-                    <button className="btn btn-success btnTable" onClick={handleSave}>Save</button>
-                    <button className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
+                    <button className="btn btn-success mybtn" onClick={handleSave}>Save</button>
+                    <button className="btn btn-secondary mybtn" onClick={handleCancel}>Cancel</button>
                 </div>
             </div>
         );
@@ -91,8 +91,8 @@ const Item = ()=> {
                     <p>{item.description}</p>
                     <p>Collection is "{item.name}"</p>
                     <div className="btnBlock">
-                        <button type="button" className="btn btn-danger btnTable" onClick={()=>handleDelete(item)}><img src={logoDelete}></img></button>
-                        <button type="button" className="btn btn-warning btnTable" onClick={()=>handleChange(item)}><img src={logoChande}></img></button>
+                        <button type="button" className="btn btn-danger mybtn" onClick={()=>handleDelete(item)}><img src={logoDelete}></img></button>
+                        <button type="button" className="btn btn-warning mybtn" onClick={()=>handleChange(item)}><img src={logoChande}></img></button>
                     </div>
                 </div>
             </div>
