@@ -8,6 +8,9 @@ import logoDelete from "../img/delete.svg";
 import logoChande from "../img/wheel.svg";
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import BackButton from "../common/BackButton";
+import base_url from "../shared/constants";
+import Header from "../common/Header";
 
 
 
@@ -28,7 +31,7 @@ const Collection = ()=> {
 
     const fetchCollection = async ()=>{
         try {
-            const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/collections/${id}`)
+            const res = await axios.get(`${base_url}/collections/${id}`)
             setData(res.data);
             setName(res.data.name);
             setDescription(res.data.description);
@@ -40,7 +43,7 @@ const Collection = ()=> {
 
     const fetchAllItems = async ()=>{
         try {
-            const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/items`)
+            const res = await axios.get(`${base_url}/items/${id}`)
             setItems(res.data);
         } catch(err) {
             console.log(err);
@@ -54,7 +57,7 @@ const Collection = ()=> {
 
 
     const handleDelete = (data)=>{ 
-        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/collections/`+data.id);   
+        axios.delete(`${base_url}/collections/`+data.id);   
         console.log(data) 
         navigate("/");
     }
@@ -71,10 +74,11 @@ const Collection = ()=> {
     };
     
     const handleSave = () => {
-        axios.put(`${process.env.REACT_APP_API_BASE_URL}/collections/${id}`, { name, description, theme })
+        axios.put(`${base_url}/collections/${id}`, { name, description, theme })
           .then(() => {
             setIsEditing(false);
             fetchCollection();
+            fetchAllItems();
           })
           .catch((err) => {
             console.log(err);
@@ -83,7 +87,7 @@ const Collection = ()=> {
 
     const handleCreateItem = (event) => {
         event.preventDefault();
-        axios.post(`${process.env.REACT_APP_API_BASE_URL}/items`, { title, descriptionItem }).then(response => {
+        axios.post(`${base_url}/items`, { title, descriptionItem, id }).then(response => {
             console.log(response.data);
             fetchAllItems();
         }).catch(error => {
@@ -93,7 +97,7 @@ const Collection = ()=> {
 
     if (isEditing) {
         return (
-            <div className="container">
+            <div className="container mycontainer">
                 <h1> Change data of collection "{data.name}"</h1>
                 <label className="form-label">  Collection name:
                     <input className="form-control" type="text" value={name} onChange={event => setName(event.target.value)} />
@@ -121,43 +125,59 @@ const Collection = ()=> {
     } else {
         return (
             <div className="container">
-                <h1>Collection "{data.name}"</h1>
-                <p>{data.description}</p>
-                <p className="text">Theme: {data.theme}</p>
-                <div className="btnBlock">
-                    <button type="button" className="btn btn-danger btnTable" onClick={()=>handleDelete(data)}><img src={logoDelete}></img></button>
-                    <button type="button" className="btn btn-warning btnTable" onClick={()=>handleChange(data)}><img src={logoChande}></img></button>
+                <div className="d-flex justify-content-between block_back btnBlock">
+                    <Header />
+                    <BackButton />
                 </div>
-                <div className="itemsBlock">
-                    <div className= "row">
-                        <div className = "col-6">
-                        {items.map((item)=>(
-                            <div className="card itemCard d-flex justify-content-center align-items-center" key={item.id}>
-                                <Link to={`/item/${item.id}`}>
-                                    <h5 className="card-title">Title: {item.title}</h5>
-                                </Link>
-                                <h5 className="card-title">Title: {item.title}</h5>
-                                <p className="card-text">Description: {item.description}</p>
+                <div className="mycontainer collection_container ">
+                    <div className="row collection_header">
+                        <div className="col-3 poster_space">
+                            <div className="posterCard">
+                                <img src={noPoster} className="card-img-top" alt="poster"></img>
                             </div>
-                        )).reverse()}
                         </div>
-                        <div className = "col-6">
-                            <h1>Create a new item</h1>
-                            <form onSubmit={handleCreateItem}>
-                                <label className="form-label">
-                                    Title:
-                                    <input className="form-control" type="text" value={title} onChange={event => setTitle(event.target.value)} />
-                                </label>
-                                <br />
-                                <label className="form-label">
-                                    Description:
-                                    <textarea className="form-control" value={descriptionItem} onChange={event => setDescriptionItem(event.target.value)} />
-                                </label>
-                                <br />
-                                <div className="btnBlock">
-                                    <button className="btn btn-primary" type="submit">add</button>
+                        <div className="col-9 collection_about">
+                            <h1>Collection "{data.name}"</h1>
+                            <p>{data.description}</p>
+                            <p className="text">Theme: {data.theme}</p>
+                            <div className="btnBlock">
+                                <button type="button" className="btn btn-danger btnTable" onClick={()=>handleDelete(data)}><img src={logoDelete}></img></button>
+                                <button type="button" className="btn btn-warning btnTable" onClick={()=>handleChange(data)}><img src={logoChande}></img></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="itemsBlock">
+                        <div className= "row">
+                            <div className = "col-8">
+                            <h3>Items:</h3>
+                            {items.map((item)=>(
+                                <div className="card itemCard d-flex justify-content-center align-items-center" key={item.id}>
+                                    <Link to={`/item/${item.id}`}>
+                                        <h5 className="card-title">Title: {item.title}</h5>
+                                    </Link>
+                                    <p className="card-text">Description: {item.description}</p>
+                                    <p className="card-text"> Collection is "{item.name}"</p>
                                 </div>
-                            </form>
+                            )).reverse()}
+                            </div>
+                            <div className = "col-4">
+                                <h3>Create a new item</h3>
+                                <form onSubmit={handleCreateItem}>
+                                    <label className="form-label">
+                                        Title:
+                                        <input className="form-control" type="text" value={title} onChange={event => setTitle(event.target.value)} />
+                                    </label>
+                                    <br />
+                                    <label className="form-label">
+                                        Description:
+                                        <textarea className="form-control" value={descriptionItem} onChange={event => setDescriptionItem(event.target.value)} />
+                                    </label>
+                                    <br />
+                                    <div className="btnBlock">
+                                        <button className="btn btn-success" type="submit">add</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

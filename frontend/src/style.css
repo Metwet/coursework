@@ -19,12 +19,32 @@ body {
     padding: 20px 0;
 }
   
-.btnTable {
-    margin-right: 10px;
+.mybtn {
+    margin: 5px;
 }
 
 .btnTable img {
     height: 20px;
+}
+
+/* common */
+
+.mycontainer {
+    background: #dce0f0;
+    margin: 30px 0;
+    padding: 30px;
+    border: 3px solid #ccd3eb;
+    border-radius: 20px;
+}
+
+.block_back {
+    margin: 5px 0;
+}
+
+/* items */
+
+.item_container {
+
 }
 
 
@@ -36,13 +56,27 @@ body {
 .itemCard {
     margin-top: 20px;
     padding: 5px;
-    width: 300px; 
+    max-width: 300px; 
     height: 600px;
 }
 
 .posterCard img{
-    width: 200px;
-    height: 320px;
+    max-width: 200px;
+    max-height: 320px;
     border-radius: 5px;
 }
   
+/* collection */
+
+.collection_container {
+
+}
+
+.collection_header{
+    padding-bottom: 15px;
+}
+
+.itemsBlock {
+    padding: 5px;
+    border-top: 2px solid #ccd3eb;
+}

@@ -3,6 +3,9 @@ import axios from "axios";
 import { useState } from "react";
 import {useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import BackButton from "../common/BackButton";
+import Header from "../common/Header";
+import base_url from "../shared/constants";
 
 
 const Signup = ()=> {
@@ -28,9 +31,9 @@ const Signup = ()=> {
 
     const handelClick = (e)=>{
         e.preventDefault()
-        console.log(process.env.REACT_APP_API_BASE_URL)
-        axios.post(`${process.env.REACT_APP_API_BASE_URL}/`, data);
-        axios.post(`${process.env.REACT_APP_API_BASE_URL}/login`, {
+        console.log("?????")
+        axios.post(`${base_url}/signup`, data);
+        axios.post(`${base_url}/login`, {
                 email: email,
                 password: password
             }).then((response)=>{
@@ -41,11 +44,12 @@ const Signup = ()=> {
             })
     }
 
-    const handelClickSecond = ()=>{navigate("/login")}
-
     return (
-        <div>
-            <div className="container mycontent d-flex align-items-center justify-content-center">
+        <div className="container">
+            <div className="d-flex justify-content-between block_back btnBlock">
+                <BackButton />
+            </div>
+            <div className="mycontent d-flex align-items-center justify-content-center">
                 <form className="row g-3" method="post">
                     <div className="row title">
                         <div className="col">
@@ -68,8 +72,8 @@ const Signup = ()=> {
                     </div>
                     <div className="row btnBlock align-items-center">
                         <div className="col">
-                            <button type="submit" className="btn btn-primary btnTable" onClick={handelClick}>sign up</button>
-                            <button type="submit" className="btn btn-secondary" onClick={handelClickSecond}>log in</button>
+                            <button type="submit" className="btn btn-primary mybtn" onClick={handelClick}>sign up</button>
+                            <button className="btn btn-secondary mybtn" onClick={()=>{navigate("/signup")}}>log in</button>
                         </div>
                     </div>
                 </form>

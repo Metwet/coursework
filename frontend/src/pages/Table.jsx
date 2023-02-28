@@ -3,6 +3,9 @@ import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
 import {useNavigate } from "react-router-dom";
+import BackButton from "../common/BackButton";
+import Header from "../common/Header";
+import base_url from "../shared/constants";
 
 const Table = ()=> {
     const [data, setData] = useState([])
@@ -10,18 +13,19 @@ const Table = ()=> {
 
     axios.defaults.withCredentials = true;
 
-    useEffect(()=>{
-        const fetchAllData = async ()=>{
-            try {
-                const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/table/`)
-                setData(res.data);
-            } catch(err) {
-                console.log(err);
-            }
+    const fetchAllData = async ()=>{
+        try {
+            const res = await axios.get(`${base_url}/table/`)
+            setData(res.data);
+        } catch(err) {
+            console.log(err);
         }
+    }
+
+    useEffect(()=>{
         fetchAllData();
 
-        axios.get(`${process.env.REACT_APP_API_BASE_URL}/login`).then((response)=>{
+        axios.get(`${base_url}/login`).then((response)=>{
             if (response.data.loggedIn){
                 if(response.data.user[0].ban_status) navigate("/login");
             } else {
@@ -48,39 +52,42 @@ const Table = ()=> {
     const handleDelete = (data)=>{      
         data.forEach((i)=>{
             if(i.isChecked) {
-                axios.delete(`${process.env.REACT_APP_API_BASE_URL}/table/`+i.id);
+                axios.delete(`${base_url}/table/`+i.id);
             }              
         })
-        window.location.reload()
+        fetchAllData();
     }
 
     const handleBlock = (data)=>{
         data.forEach((i)=>{
             if(i.isChecked) {
-                axios.put(`${process.env.REACT_APP_API_BASE_URL}/table/`+i.id, {
+                axios.put(`${base_url}/table/`+i.id, {
                     ban_status: true
                 });
             }              
         })
-        window.location.reload()
+        fetchAllData();
     }
 
     const handleUnblock = (data)=>{
         console.log("in handleBan")
         data.forEach((i)=>{
             if(i.isChecked) {
-                axios.put(`${process.env.REACT_APP_API_BASE_URL}/table/`+i.id, {
+                axios.put(`${base_url}/table/`+i.id, {
                     ban_status: false
                 });
             }              
         })
-        window.location.reload()
+        fetchAllData();
     }
 
 
     return (
         <div>
             <div className="container mycontent ">
+                <div className="d-flex justify-content-between block_back btnBlock">
+                    <BackButton />
+                </div>
                 <form action="get">
                     <div className="row title">
                         <div className="col">

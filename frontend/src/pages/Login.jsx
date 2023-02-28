@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import {useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import base_url from "../shared/constants";
 
 const Login = ()=> {
     const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ const Login = ()=> {
 
     const handelClick = (e)=>{
         e.preventDefault()
-        axios.post(`${process.env.REACT_APP_API_BASE_URL}/login`, {
+        axios.post(`${base_url}/login`, {
             email: email,
             password: password
         }).then((response)=>{
@@ -34,8 +35,6 @@ const Login = ()=> {
             }
         })
     }
-
-    const handelClickSecond = ()=>{navigate("/")}
 
     return (
         <div>
@@ -59,7 +58,7 @@ const Login = ()=> {
                     <div className="row btnBlock align-items-center">
                         <div className="col">
                             <button type="submit" className="btn btn-primary btnTable" onClick={handelClick}>log in</button>
-                            <button type="submit" className="btn btn-secondary" onClick={handelClickSecond}>sign up</button>
+                            <button className="btn btn-secondary" onClick={()=>{navigate("/signup")}}>sign up</button>
                         </div>
                     </div>
                     <div className="row">
