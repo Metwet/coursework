@@ -27,6 +27,21 @@ body {
     height: 20px;
 }
 
+.mytag {
+    background-color: rgb(214, 207, 207);
+    padding: 2px;
+    margin-right: 3px;
+}
+
+.mytag img {
+    max-width: 15px;
+    max-width: 15px;
+}
+
+.mytag button {
+    padding: 2px;
+    height: 25px;
+}
 /* common */
 
 .mycontainer {

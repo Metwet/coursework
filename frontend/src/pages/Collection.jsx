@@ -5,6 +5,7 @@ import {useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import noPoster from "../img/noposter.png";
 import logoDelete from "../img/delete.svg";
+import logoDeleteTag from "../img/deletetag.svg";
 import logoChande from "../img/wheel.svg";
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -26,6 +27,9 @@ const Collection = ()=> {
 
     const [title, setTitle] = useState('');
     const [descriptionItem, setDescriptionItem] = useState('');
+
+    const [tag, setTag] = useState('');
+    const [tags, setTags] = useState([]);
 
     const [items, setItems] = useState([]);
 
@@ -87,13 +91,32 @@ const Collection = ()=> {
 
     const handleCreateItem = (event) => {
         event.preventDefault();
-        axios.post(`${base_url}/items`, { title, descriptionItem, id }).then(response => {
+        axios.post(`${base_url}/items`, { title, descriptionItem, id, tags}).then(response => {
             console.log(response.data);
             fetchAllItems();
         }).catch(error => {
             console.log(error);
         });
     };
+
+    const handleAddTeg = (event) => {
+        event.preventDefault();
+        if (!tag) {
+            return;
+        }
+        
+        if (tags.includes(tag)) {
+            alert("This tag already exists");
+            setTag('');
+            return;
+        }
+        setTag('');
+        setTags([...tags, tag]);
+    }
+
+    const handleDeleteTeg = (index) =>{
+        setTags(tags.filter((_, i) => i !== index))
+    }
 
     if (isEditing) {
         return (
@@ -157,6 +180,10 @@ const Collection = ()=> {
                                     </Link>
                                     <p className="card-text">Description: {item.description}</p>
                                     <p className="card-text"> Collection is "{item.name}"</p>
+                                    {item.tagname[0] && <div className="card-text  d-flex flex-row align-self-center"> Tags: {item.tagname.map((tag)=>(
+                                        <span className="card mytag"> {tag} </span>
+                                    ))}</div>}
+                                    {console.log(item.tagname)}
                                 </div>
                             )).reverse()}
                             </div>
@@ -172,6 +199,23 @@ const Collection = ()=> {
                                         Description:
                                         <textarea className="form-control" value={descriptionItem} onChange={event => setDescriptionItem(event.target.value)} />
                                     </label>
+                                    <br />
+                                    <label className="form-label">
+                                        Add tag:
+                                        <input className="form-control" type="text" value={tag} onChange={event => setTag(event.target.value)} />                                    
+                                    </label>
+                                    <button className="btn btn-success mybtn" onClick={handleAddTeg}>+</button>
+                                    <br />
+                                    <div className="showTags d-flex">
+                                        {tags.map((tag, index)=>(
+                                            <div className="mytag card d-flex flex-row align-self-center" key={index}>
+                                                <span className="me-2">{tag}</span>
+                                                <button type="button" className="btn btn-danger d-flex align-items-center justify-content-center" onClick={() => handleDeleteTeg(index)}>
+                                                    <img src={logoDeleteTag} alt="delete" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
                                     <br />
                                     <div className="btnBlock">
                                         <button className="btn btn-success mybtn" type="submit">add</button>

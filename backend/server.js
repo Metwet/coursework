@@ -134,13 +134,27 @@ app.put('/collections/:id', (req, res) => {
 
 app.get("/items/:id", (req, res)=> {
     const id = req.params.id;
-    const q = `SELECT items.*, collections.name
+    const q = `SELECT items.*, collections.name, tags.tagname
     FROM items
     INNER JOIN collections ON items.collection_id = collections.id
+    LEFT JOIN tags ON items.id = tags.item_id
     WHERE items.collection_id =  ${id};`
+    // connection.query(q, (err,data)=>{
+    //     if(err) return res.json(err)
+    //     console.log(data)
+    //     return res.json(data)
+    // })
     connection.query(q, (err,data)=>{
-        if(err) return res.json(err)
-        return res.json(data)
+        if(err) return res.json(err);
+        const itemsWithTags = data.reduce((acc, item) => {
+          if (!acc[item.id]) {
+            acc[item.id] = { ...item, tagname: [item.tagname] };
+          } else {
+            acc[item.id].tagname.push(item.tagname);
+          }
+          return acc;
+        }, {});
+        return res.json(Object.values(itemsWithTags));
     })
 })
 
@@ -162,6 +176,17 @@ app.post("/items", (request, response)=> {
         const q = `INSERT INTO items (title, description, collection_id) VALUES('${request.body.title}', '${request.body.descriptionItem}', '${request.body.id}')`;
         connection.query(q, (err, results)=>{
             if(err) return results.json(err);
+            const itemId = results.insertId;
+            console.log(itemId);
+            request.body.tags.forEach((tagName) => {
+                const tagQuery = `INSERT INTO tags (tagname, item_id) VALUES ('${tagName}', ${itemId})`;
+                connection.query(tagQuery, (err, tagResult) => {
+                    if(err) {
+                        console.error(err);
+                        return response.status(500).json({ message: 'Ошибка сервера' });
+                    }
+                })
+            });
         });
         response.json({message: 'Данные отправлены'})
     } catch (error) {
