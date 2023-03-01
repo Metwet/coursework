@@ -283,7 +283,7 @@ app.post("/login", (req, res)=>{
                     expiresIn: 300,
                 })
                 req.session.user = result;
-                res.json({auth: true, token: token, result: result});
+                res.json({loggedIn: true, user: req.session.user, auth: true, token: token});
 
                 const date = new Date();
                 const registrationDate = date.toISOString().slice(0, 18);

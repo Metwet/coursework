@@ -183,7 +183,6 @@ const Collection = ()=> {
                                     {item.tagname[0] && <div className="card-text  d-flex flex-row align-self-center"> Tags: {item.tagname.map((tag)=>(
                                         <span className="card mytag"> {tag} </span>
                                     ))}</div>}
-                                    {console.log(item.tagname)}
                                 </div>
                             )).reverse()}
                             </div>

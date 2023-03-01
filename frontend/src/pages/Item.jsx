@@ -39,7 +39,7 @@ const Item = ()=> {
     const handleDelete = (item)=>{ 
         axios.delete(`${base_url}/item/${id}`);   
         console.log(item) 
-        navigate("/");
+        navigate(-1);
     }
 
     const handleChange = ()=>{
