@@ -25,7 +25,7 @@ const Login = ()=> {
             if(!response.data.auth){
                 setBanStatus(false);
                 setWrongData("Wrong password or email.")
-            } else if (response.data.result[0].ban_status) {
+            } else if (response.data.user[0].ban_status) {
                 setWrongData("")
                 setBanStatus(true);
             } else {

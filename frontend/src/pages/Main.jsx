@@ -53,7 +53,7 @@ const Main = ()=> {
                     {items && items.map((item)=>(
                         <div className="col-3 card itemCard d-flex justify-content-top align-items-center" key={item.id}>
                             <Link to={`/item/${item.id}`}>
-                                    <h5 className="card-title">Title: {item.title}</h5>
+                                    <h5 className="card-title">{item.title}</h5>
                             </Link>
                             <p className="card-text">Description: {item.description}</p>
                             <p className="card-text">Tags: {item.tag_ids}</p>
@@ -68,7 +68,7 @@ const Main = ()=> {
                                 <img src={noPoster} className="card-img-top" alt="poster"></img>
                             </div>
                             <Link to={`/collection/${collection.id}`}>
-                                <h5 className="card-title">Title: {collection.name}</h5>
+                                <h5 className="card-title">{collection.name}</h5>
                             </Link>
                                 <p className="card-text">Description: {collection.description}</p>
                                 <p className="card-text">Theme: {collection.theme}</p>

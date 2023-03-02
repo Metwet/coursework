@@ -58,15 +58,15 @@ const Signup = ()=> {
                     </div>
                     <div className="row">
                         <div className="col-3">
-                            <label for="inputUsername" className="form-label">Username</label>
+                            <label htmlFor="inputUsername" className="form-label">Username</label>
                             <input type="text" className="form-control" name="username" onChange={handleChange} id="inputUsername" />
                         </div>
                         <div className="col-3">
-                            <label for="inputEmail" className="form-label">Email address</label>
+                            <label htmlFor="inputEmail" className="form-label">Email address</label>
                             <input type="email" className="form-control" name="email" onChange={handleChange} id="inputEmail" />
                         </div>
                         <div className="col-3">
-                            <label for="inputPassword" className="form-label">Password</label>
+                            <label htmlFor="inputPassword" className="form-label">Password</label>
                             <input type="password" className="form-control" name="password" onChange={handleChange} id="inputPassword" />
                         </div>
                     </div>

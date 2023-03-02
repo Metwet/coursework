@@ -29,6 +29,14 @@ app.use(cors({
 }));
 app.use(express.json());
 
+app.use(sessions({
+    key: "userId",
+    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    saveUninitialized: false,
+    cookie: { expires: 60 * 60 * 24 },
+    resave: false
+  }));
+
 app.get("/", (req, res)=> {
     const q = "SELECT * FROM items"
     connection.query(q, (err,data)=>{
@@ -147,11 +155,6 @@ app.get("/items/:id", (req, res)=> {
     INNER JOIN collections ON items.collection_id = collections.id
     LEFT JOIN tags ON items.id = tags.item_id
     WHERE items.collection_id =  ${id};`
-    // connection.query(q, (err,data)=>{
-    //     if(err) return res.json(err)
-    //     console.log(data)
-    //     return res.json(data)
-    // })
     connection.query(q, (err,data)=>{
         if(err) return res.json(err);
         const itemsWithTags = data.reduce((acc, item) => {
@@ -249,33 +252,6 @@ app.post("/items", (request, response) => {
       response.status(500).json({ message: "Ошибка сервера" });
     }
   });
-  
-
-// app.post("/items", (request, response)=> {
-//     if(!request.body) return response.sendStatus(400);
-//     try {
-//         const q = `INSERT INTO items (title, description, collection_id) VALUES('${request.body.title}', '${request.body.descriptionItem}', '${request.body.id}')`;
-//         connection.query(q, (err, results)=>{
-//             if(err) return results.json(err);
-//             const itemId = results.insertId;
-//             console.log(itemId);
-//             request.body.tags.forEach((tagName) => {
-//                 const tagQuery = `INSERT INTO tags (tagname, item_id) VALUES ('${tagName}', ${itemId})`;
-//                 connection.query(tagQuery, (err, tagResult) => {
-//                     if(err) {
-//                         console.error(err);
-//                         return response.status(500).json({ message: 'Ошибка сервера' });
-//                     }
-//                 })
-//             });
-//         });
-//         response.json({message: 'Данные отправлены'})
-//     } catch (error) {
-//         console.log(error);
-//         response.status(500).json({ message: 'Ошибка сервера' });
-//     }
-    
-// });
 
 app.delete("/item/:id", (req, res)=>{
     const userId = req.params.id;
