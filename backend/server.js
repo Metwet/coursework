@@ -5,7 +5,8 @@ import bodyParser from "body-parser";
 import cookieParser  from "cookie-parser";
 import sessions  from "express-session";
 import jwt from "jsonwebtoken";
-
+import redis from "redis"
+import connectRedis from 'connect-redis';
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -29,7 +30,10 @@ app.use(cors({
 }));
 app.use(express.json());
 
+const RedisStore = connectRedis(session);
+const redisClient = redis.createClient();
 app.use(sessions({
+    store: new RedisStore({ client: redisClient }),
     key: "userId",
     secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
     saveUninitialized: false,
