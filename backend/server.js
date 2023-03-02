@@ -70,14 +70,6 @@ app.get("/main/items", (req, res)=> {
     })
 })
 
-app.get("/main/collections", (req, res)=> {
-    const q = "SELECT * FROM collections"
-    connection.query(q, (err,data)=>{
-        if(err) return res.json(err)
-        return res.json(data)
-    })
-})
-
 // CRUD collections
 
 app.get("/collections", (req, res)=> {

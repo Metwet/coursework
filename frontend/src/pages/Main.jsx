@@ -18,7 +18,7 @@ const Main = ()=> {
 
     const fetchAllCollections = async ()=>{
         try {
-            const res = await axios.get(`${base_url}/main/collections`)
+            const res = await axios.get(`${base_url}/collections`)
             setCollections(res.data);
         } catch(err) {
             console.log(err);
@@ -45,7 +45,9 @@ const Main = ()=> {
                 <Header />
             </div>
             <div className="mycontainer">
-                <button type="submit" className="btn btn-primary mybtn" onClick={()=>{navigate("/collections")}}>My collections</button>
+                <div className="d-flex justify-content-between">
+                    <button type="submit" className="btn btn-primary mybtn ms-auto" onClick={()=>{navigate("/collections")}}>My collections</button>
+                </div>
                 <div className="items_main_block row">
                     <h2>All items:</h2>
                     {items && items.map((item)=>(
@@ -57,6 +59,21 @@ const Main = ()=> {
                             <p className="card-text">Tags: {item.tag_ids}</p>
                         </div>                  
                     )).reverse()}
+                </div>
+                <div className="collectionsBlock row">
+                    <h2>Collections:</h2>
+                    {collections && collections.map((collection)=>(
+                        <div className="col-3 card itemCard d-flex justify-content-center align-items-center" key={collection.id}>
+                            <div className="posterCard">
+                                <img src={noPoster} className="card-img-top" alt="poster"></img>
+                            </div>
+                            <Link to={`/collection/${collection.id}`}>
+                                <h5 className="card-title">Title: {collection.name}</h5>
+                            </Link>
+                                <p className="card-text">Description: {collection.description}</p>
+                                <p className="card-text">Theme: {collection.theme}</p>
+                        </div>                  
+                            )).reverse()}
                 </div>
             </div>
         </div>

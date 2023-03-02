@@ -46,6 +46,7 @@ const Collections = ()=> {
             <div className="container">
                 <div className="d-flex justify-content-between block_back btnBlock">
                     <Header />
+                    <BackButton />
                 </div>
                 <div className="row mycontainer">
                     <div className="col-6">
