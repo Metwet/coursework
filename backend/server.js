@@ -22,7 +22,8 @@ connection.connect(function(err) {
 });
 
 app.use(cors({
-    origin: [`${process.env.ORIGIN_URL}`],
+    //origin: [`${process.env.ORIGIN_URL}`],
+    origin: [`*`],
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials:true,
     headers: ["Origin", "X-Requested-With", "Content-Type", "Accept"]
