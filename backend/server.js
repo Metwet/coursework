@@ -61,6 +61,22 @@ app.delete("/:id", (req, res)=>{
         return res.json("Row has been deleted successfully!");
     });
 })
+// main page
+app.get("/main/items", (req, res)=> {
+    const q = "SELECT * FROM items"
+    connection.query(q, (err,data)=>{
+        if(err) return res.json(err)
+        return res.json(data)
+    })
+})
+
+app.get("/main/collections", (req, res)=> {
+    const q = "SELECT * FROM collections"
+    connection.query(q, (err,data)=>{
+        if(err) return res.json(err)
+        return res.json(data)
+    })
+})
 
 // CRUD collections
 
@@ -170,31 +186,104 @@ app.get("/item/:id", (req, res)=> {
     })
 })
 
-app.post("/items", (request, response)=> {
-    if(!request.body) return response.sendStatus(400);
+app.post("/items", (request, response) => {
+    if (!request.body) return response.sendStatus(400);
     try {
-        const q = `INSERT INTO items (title, description, collection_id) VALUES('${request.body.title}', '${request.body.descriptionItem}', '${request.body.id}')`;
-        connection.query(q, (err, results)=>{
-            if(err) return results.json(err);
-            const itemId = results.insertId;
-            console.log(itemId);
-            request.body.tags.forEach((tagName) => {
-                const tagQuery = `INSERT INTO tags (tagname, item_id) VALUES ('${tagName}', ${itemId})`;
-                connection.query(tagQuery, (err, tagResult) => {
-                    if(err) {
-                        console.error(err);
-                        return response.status(500).json({ message: 'Ошибка сервера' });
+      const { title, descriptionItem, id, tags } = request.body;
+      const tagIds = [];
+  
+      const q = `INSERT INTO items (title, description, collection_id, tag_ids) VALUES('${title}', '${descriptionItem}', '${id}', '[]')`;
+      connection.query(q, (err, results) => {
+        if (err) {
+          console.error(err);
+          return response.status(500).json({ message: "Ошибка сервера" });
+        }
+        const itemId = results.insertId;  
+        tags.forEach((tagName) => {
+          const tagQuery = `SELECT id FROM tags WHERE tagname = '${tagName}'`;
+          connection.query(tagQuery, (err, tagResult) => {
+            if (err) {
+              console.error(err);
+              return response.status(500).json({ message: "Ошибка сервера" });
+            }
+  
+            if (tagResult.length > 0) {
+              tagIds.push(tagResult[0].id);
+              if (tagIds.length === tags.length) {
+                const updateQuery = `UPDATE items SET tag_ids = '${JSON.stringify(
+                  tagIds
+                )}' WHERE id = ${itemId}`;
+                connection.query(updateQuery, (err, updateResult) => {
+                  if (err) {
+                    console.error(err);
+                    return response
+                      .status(500)
+                      .json({ message: "Ошибка сервера" });
+                  }
+                  response.json({ message: "Данные отправлены" });
+                });
+              }
+            } else {
+              const insertTagQuery = `INSERT INTO tags (tagname, item_id) VALUES ('${tagName}', ${itemId})`;
+              connection.query(insertTagQuery, (err, insertResult) => {
+                if (err) {
+                  console.error(err);
+                  return response
+                    .status(500)
+                    .json({ message: "Ошибка сервера" });
+                }
+                tagIds.push(insertResult.insertId);
+                if (tagIds.length === tags.length) {
+                  const updateQuery = `UPDATE items SET tag_ids = '${JSON.stringify(
+                    tagIds
+                  )}' WHERE id = ${itemId}`;
+                  connection.query(updateQuery, (err, updateResult) => {
+                    if (err) {
+                      console.error(err);
+                      return response
+                        .status(500)
+                        .json({ message: "Ошибка сервера" });
                     }
-                })
-            });
+                    response.json({ message: "Данные отправлены" });
+                  });
+                }
+              });
+            }
+          });
         });
-        response.json({message: 'Данные отправлены'})
+      });
     } catch (error) {
-        console.log(error);
-        response.status(500).json({ message: 'Ошибка сервера' });
+      console.log(error);
+      response.status(500).json({ message: "Ошибка сервера" });
     }
+  });
+  
+
+// app.post("/items", (request, response)=> {
+//     if(!request.body) return response.sendStatus(400);
+//     try {
+//         const q = `INSERT INTO items (title, description, collection_id) VALUES('${request.body.title}', '${request.body.descriptionItem}', '${request.body.id}')`;
+//         connection.query(q, (err, results)=>{
+//             if(err) return results.json(err);
+//             const itemId = results.insertId;
+//             console.log(itemId);
+//             request.body.tags.forEach((tagName) => {
+//                 const tagQuery = `INSERT INTO tags (tagname, item_id) VALUES ('${tagName}', ${itemId})`;
+//                 connection.query(tagQuery, (err, tagResult) => {
+//                     if(err) {
+//                         console.error(err);
+//                         return response.status(500).json({ message: 'Ошибка сервера' });
+//                     }
+//                 })
+//             });
+//         });
+//         response.json({message: 'Данные отправлены'})
+//     } catch (error) {
+//         console.log(error);
+//         response.status(500).json({ message: 'Ошибка сервера' });
+//     }
     
-});
+// });
 
 app.delete("/item/:id", (req, res)=>{
     const userId = req.params.id;

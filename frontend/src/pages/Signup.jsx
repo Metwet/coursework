@@ -31,7 +31,7 @@ const Signup = ()=> {
 
     const handelClick = (e)=>{
         e.preventDefault()
-        console.log("?????")
+        console.log(data)
         axios.post(`${base_url}/signup`, data);
         axios.post(`${base_url}/login`, {
                 email: email,

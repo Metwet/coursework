@@ -23,7 +23,8 @@ function App() {
     <div className="App">
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Collections/>}/>
+                <Route path="/" element={<Main/>}/>
+                <Route path="/collections" element={<Collections/>}/>
                 <Route path="/collection/:id" element={<Collection/>}/>
                 <Route path="/item/:id" element={<Item/>}/>
                 <Route path="/main" element={<Main/>}/>

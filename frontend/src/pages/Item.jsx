@@ -23,6 +23,7 @@ const Item = ()=> {
     const fetchItem = async ()=>{
         try {
             const res = await axios.get(`${base_url}/item/${id}`)
+            console.log(res.data)
             setItem(res.data[0]);
             setTitle(res.data[0].title);
             setDescription(res.data[0].description);
