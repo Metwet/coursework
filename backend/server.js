@@ -340,6 +340,7 @@ app.post("/login", (req, res)=>{
                     expiresIn: 300,
                 })
                 req.session.user = result;
+                console.log(req.session.user);
                 res.json({loggedIn: true, user: req.session.user, auth: true, token: token});
 
                 const date = new Date();
