@@ -22,8 +22,7 @@ connection.connect(function(err) {
 });
 
 app.use(cors({
-    //origin: [`${process.env.ORIGIN_URL}`],
-    origin: [`*`],
+    origin: [`${process.env.ORIGIN_URL}`],
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials:true,
     headers: ["Origin", "X-Requested-With", "Content-Type", "Accept"]
@@ -304,17 +303,20 @@ app.post("/signup", function (request, response) {
 });
 
 app.get('/login', (req, res)=>{
+    console.log("get login");
     if(req.session.user){
         const id = req.session.user.id;
         const token = jwt.sign({id}, "jwtSecret", {
             expiresIn: 300,
         })
-
         const q = `SELECT * FROM users WHERE id = ?`;
         connection.query(q, [req.session.user[0].id], function(error, results) {
             if (error) throw error;
+            console.log(results);
             if (results.length>0){
+                console.log(req.session.user);
                 req.session.user = results;
+                console.log(req.session.user);
                 res.json({loggedIn: true, user: req.session.user, auth: true, token: token});
             } else {
                 res.send({loggedIn: false, message: "DELETE"})
@@ -326,6 +328,7 @@ app.get('/login', (req, res)=>{
 });
 
 app.post("/login", (req, res)=>{
+    console.log("post login");
     const email = req.body.email;
     const password = req.body.password;
     const q = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -334,12 +337,15 @@ app.post("/login", (req, res)=>{
         if(error){
             res.send({error: error});
         }
+        console.log(result);
+        console.log(result[0]);
         if(result.length > 0){
             if(result[0].password == password){
                 const id = result[0].id;
                 const token = jwt.sign({id}, "jwtSecret", {
                     expiresIn: 300,
                 })
+                console.log(req.session.user);
                 req.session.user = result;
                 console.log(req.session.user);
                 res.json({loggedIn: true, user: req.session.user, auth: true, token: token});
