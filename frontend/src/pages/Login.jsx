@@ -31,7 +31,7 @@ const Login = ()=> {
             } else {
                 setBanStatus(false);
                 setWrongData("")
-                navigate("/table");
+                navigate("/");
             }
         })
     }

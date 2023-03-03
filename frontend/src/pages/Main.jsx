@@ -63,7 +63,7 @@ const Main = ()=> {
                 <div className="collectionsBlock row">
                     <h2>Collections:</h2>
                     {collections && collections.map((collection)=>(
-                        <div className="col-3 card itemCard d-flex justify-content-center align-items-center" key={collection.id}>
+                        <div className="col-3 card itemCard d-flex justify-content-top align-items-center" key={collection.id}>
                             <div className="posterCard">
                                 <img src={noPoster} className="card-img-top" alt="poster"></img>
                             </div>

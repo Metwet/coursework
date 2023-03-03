@@ -6,6 +6,8 @@ import {useNavigate } from "react-router-dom";
 import BackButton from "../common/BackButton";
 import Header from "../common/Header";
 import base_url from "../shared/constants";
+import logoUnblock from "../img/unblock.svg";
+import logoDelete from "../img/delete.svg";
 
 const Table = ()=> {
     const [data, setData] = useState([])
@@ -96,7 +98,9 @@ const Table = ()=> {
                     </div>
                     <div className="row toolbar">
                         <div className="col">
-                            <button type="button" className="btn btn-danger btnTable" onClick={()=>handleBlock(data)}>Block</button>
+                            <button type="button" className="btn btn-danger mybtn" onClick={()=>handleBlock(data)}>Block</button>
+                            <button type="button" className="btn btn-success mybtn" onClick={()=>handleUnblock(data)}><img src={logoUnblock} alt="unblock"></img></button>
+                            <button type="button" className="btn btn-warning mybtn" onClick={()=>handleDelete(data)}><img src={logoDelete}></img></button>
                         </div>
                     </div>
                     <div className="row headline border">

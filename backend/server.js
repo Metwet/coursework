@@ -4,6 +4,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser  from "cookie-parser";
 import sessions  from "express-session";
+import MySQLStore from 'express-mysql-session';
 import jwt from "jsonwebtoken";
 
 import dotenv from "dotenv";
@@ -37,38 +38,6 @@ app.use(sessions({
     resave: false
   }));
 
-app.get("/", (req, res)=> {
-    const q = "SELECT * FROM items"
-    connection.query(q, (err,data)=>{
-        if(err) return res.json(err)
-        return res.json(data)
-    })
-})
-
-app.post("/", (request, response)=> {
-    if(!request.body) return response.sendStatus(400);
-    try {
-        const q = `INSERT INTO items (title, description) VALUES('${request.body.title}', '${request.body.description}')`;
-        connection.query(q, (err, results)=>{
-            if(err) return results.json(err);
-        });
-        response.json({message: 'Данные отправлены'})
-    } catch (error) {
-        console.log(error);
-        response.status(500).json({ message: 'Ошибка сервера' });
-    }
-    
-});
-
-app.delete("/:id", (req, res)=>{
-    console.log("tyt")
-    const userId = req.params.id;
-    const q = "DELETE FROM items WHERE id = ?";
-    connection.query(q, [userId], (err, data) => {
-        if(err) return res.json(err);
-        return res.json("Row has been deleted successfully!");
-    });
-})
 // main page
 app.get("/main/items", (req, res)=> {
     const q = "SELECT * FROM items"
@@ -287,19 +256,28 @@ app.get('/signup', (req, res)=>{
 });
 
 app.post("/signup", function (request, response) {
-    if(!request.body) return response.sendStatus(400);
+    if (!request.body || !request.body.username || !request.body.email || !request.body.password) {
+        return response.status(400).json({ error: "Username, email, and password fields are required" });
+    }
 
+    const { username, email, password } = request.body;
     const date = new Date();
     const registrationDate = date.toISOString().slice(0, 18);
     const data = [registrationDate];
-    
-    const q = `INSERT INTO users(name, email, password, reg_date, login_date) VALUES('${request.body.username}', '${request.body.email}', '${request.body.password}', '${data}', '${data}')`;
- 
-    connection.query(q, (err, results)=>{
-        if(err) return results.json(err);
-        console.log("user created")
-    });
 
+    const emailQuery = `SELECT * FROM users WHERE email='${email}'`;
+    connection.query(emailQuery, (emailErr, emailResults) => {
+        if (emailErr) return response.status(500).json({ error: "Database error" });
+        if (emailResults.length > 0) return response.status(400).json({ error: "Email already exists" });
+
+        const q = `INSERT INTO users(name, email, password, reg_date, login_date) VALUES('${username}', '${email}', '${password}', '${data}', '${data}')`;
+
+        connection.query(q, (err, results)=>{
+            if(err) return response.status(500).json({ error: "Database error" });
+            console.log("user created");
+            response.sendStatus(200);
+        });
+    });
 });
 
 app.get('/login', (req, res)=>{
