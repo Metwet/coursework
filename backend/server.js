@@ -34,11 +34,11 @@ app.use(sessions({
     key: "userId",
     secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
     saveUninitialized: false,
-    cookie: { expires: 60 * 60 * 24 },
+    cookie: { expires: 60 * 60 * 24, httpOnly: true},
     resave: false
   }));
 
-  app.use(cookieParser());
+app.use(cookieParser());
 
 const authorization = (req, res, next) => {
   console.log('in auth function')
@@ -401,17 +401,13 @@ app.post("/login", (req, res)=>{
             res.send({error: error});
         }
         console.log(result);
-        // conclsole.log(result[0]);
         if(result.length > 0){
             if(result[0].password == password){
                 const id = result[0].id;
                 const token = jwt.sign({id}, "jwtSecret", {
                     expiresIn: 300,
                 })
-                // console.log(req.session.user);
                 req.session.user = result;
-                // console.log(req.session.user);
-                // res.json({loggedIn: true, user: req.session.user, auth: true, token: token});
                 console.log("before cookie");
                 res.cookie("access_token", token, {
                   httpOnly: true,
