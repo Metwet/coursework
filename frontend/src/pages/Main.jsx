@@ -15,6 +15,8 @@ const Main = ()=> {
     const [user, setUser] = useState({})
     const navigate = useNavigate()
 
+    axios.defaults.withCredentials = true;
+
     const fetchUser = async ()=> {
         try {
             const res = await axios.get(`${base_url}/authorization`)
