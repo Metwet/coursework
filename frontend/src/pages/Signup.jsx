@@ -3,8 +3,8 @@ import axios from "axios";
 import { useState } from "react";
 import {useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import BackButton from "../common/BackButton";
-import Header from "../common/Header";
+import BackButton from "../shared/components/BackButton";
+import Header from "../shared/components/Header";
 import base_url from "../shared/constants";
 
 
@@ -31,16 +31,13 @@ const Signup = ()=> {
 
     const handelClick = (e)=>{
         e.preventDefault()
-        axios.post(`${base_url}/signup`, data);
-        axios.post(`${base_url}/login`, {
-                email: email,
-                password: password
-            }).then((response)=>{
-                if(!response.data.auth){
-                } else {
-                    navigate("/");
-                }
-            })
+        axios.post(`${base_url}/signup`, data).then((response)=>{
+            if(!response.data.auth){
+            } else {
+                console.log(response.data)
+                navigate("/");
+            }
+        });
     }
 
     return (

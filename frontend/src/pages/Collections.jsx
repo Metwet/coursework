@@ -8,8 +8,8 @@ import logoDelete from "../img/delete.svg";
 import logoChande from "../img/wheel.svg";
 import { Link } from 'react-router-dom';
 import base_url from "../shared/constants";
-import BackButton from "../common/BackButton";
-import Header from "../common/Header";
+import BackButton from "../shared/components/BackButton";
+import Header from "../shared/components/Header";
 
 
 const Collections = ()=> {

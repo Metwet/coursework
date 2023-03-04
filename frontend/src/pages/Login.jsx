@@ -47,11 +47,11 @@ const Login = ()=> {
                     </div>
                     <div className="row">
                         <div className="col-3">
-                            <label for="inputEmail" className="form-label">Email address</label>
+                            <label htmlFor="inputEmail" className="form-label">Email address</label>
                             <input type="email" className="form-control" name="email" onChange={(e)=>(setEmail(e.target.value))} id="inputEmail" />
                         </div>
                         <div className="col-3">
-                            <label for="inputPassword" className="form-label">Password</label>
+                            <label htmlFor="inputPassword" className="form-label">Password</label>
                             <input type="password" className="form-control" name="password" onChange={(e)=>(setPassword(e.target.value))} id="inputPassword" />
                         </div>
                     </div>

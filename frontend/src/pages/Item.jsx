@@ -7,7 +7,8 @@ import noPoster from "../img/noposter.png";
 import logoDelete from "../img/delete.svg";
 import logoChande from "../img/wheel.svg";
 import { useParams } from 'react-router-dom';
-import BackButton from "../common/BackButton";
+import BackButton from "../shared/components/BackButton";
+import Header from "../shared/components/Header";
 import base_url from "../shared/constants";
 
 

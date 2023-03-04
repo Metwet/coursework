@@ -38,6 +38,36 @@ app.use(sessions({
     resave: false
   }));
 
+  app.use(cookieParser());
+
+const authorization = (req, res, next) => {
+  console.log('in auth function')
+  const token = req.cookies.access_token;
+  console.log(token);
+  console.log(req.cookies);
+  if (!token) {
+    return res.sendStatus(403);
+  }
+  try {
+    const data = jwt.verify(token, "jwtSecret"); // decrypted from cookie (token)
+    req.userId = data.id;
+    console.log("test authorization")
+    console.log(req.userId)
+    //req.userRole = data.role;
+    return next();
+  } catch {
+    return res.sendStatus(403);
+  }
+};
+
+app.get("/authorization", authorization, (req, res)=> {
+  const q = `SELECT * FROM users WHERE id = ${req.userId}`
+  connection.query(q, (err,data)=>{
+      if(err) return res.json(err)
+      return res.json(data)
+  })
+})
+
 // main page
 app.get("/main/items", (req, res)=> {
     const q = "SELECT * FROM items"
@@ -255,30 +285,85 @@ app.get('/signup', (req, res)=>{
     }
 });
 
-app.post("/signup", function (request, response) {
-    if (!request.body || !request.body.username || !request.body.email || !request.body.password) {
-        return response.status(400).json({ error: "Username, email, and password fields are required" });
+app.post("/signup", (req, res) => {
+    if (!req.body || !req.body.username || !req.body.email || !req.body.password) {
+      return res.status(400).json({ error: "Username, email, and password fields are required" });
     }
-
-    const { username, email, password } = request.body;
+  
+    const { username, email, password } = req.body;
+    console.log(req.body)
     const date = new Date();
     const registrationDate = date.toISOString().slice(0, 18);
     const data = [registrationDate];
-
+  
     const emailQuery = `SELECT * FROM users WHERE email='${email}'`;
     connection.query(emailQuery, (emailErr, emailResults) => {
-        if (emailErr) return response.status(500).json({ error: "Database error" });
-        if (emailResults.length > 0) return response.status(400).json({ error: "Email already exists" });
-
-        const q = `INSERT INTO users(name, email, password, reg_date, login_date) VALUES('${username}', '${email}', '${password}', '${data}', '${data}')`;
-
-        connection.query(q, (err, results)=>{
-            if(err) return response.status(500).json({ error: "Database error" });
-            console.log("user created");
-            response.sendStatus(200);
+      if (emailErr) return res.status(500).json({ error: "Database error" });
+      if (emailResults.length > 0) return res.status(400).json({ error: "Email already exists" });
+  
+      const q = `INSERT INTO users(name, email, password, reg_date, login_date) VALUES('${username}', '${email}', '${password}', '${data}', '${data}')`;
+  
+      connection.query(q, (err, results) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+        console.log("user created");
+  
+        const qLogin = "SELECT * FROM users WHERE email = ? AND password = ?";
+        connection.query(qLogin, [email, password], (error, result) => {
+          if (error) {
+            res.send({ error: error });
+          }
+          if (result.length > 0) {
+            if (result[0].password == password) {
+              const id = result[0].id;
+              const token = jwt.sign({ id }, "jwtSecret", {
+                expiresIn: 300,
+              });
+              req.session.user = result;
+              console.log(req.session.user);
+              res.json({ loggedIn: true, user: req.session.user, auth: true, token: token });
+  
+              const date = new Date();
+              const registrationDate = date.toISOString().slice(0, 18);
+  
+              const sql = `UPDATE users SET login_date = ? WHERE id = ?`;
+              const data = [registrationDate, id];
+              connection.query(sql, data, function (err, result) {
+                if (err) throw err;
+              });
+            }
+          } else {
+            res.json({ auth: false, message: "no user exists" });
+          }
         });
+      });
     });
-});
+  });
+  
+
+// app.post("/signup", function (request, response) {
+//     if (!request.body || !request.body.username || !request.body.email || !request.body.password) {
+//         return response.status(400).json({ error: "Username, email, and password fields are required" });
+//     }
+
+//     const { username, email, password } = request.body;
+//     const date = new Date();
+//     const registrationDate = date.toISOString().slice(0, 18);
+//     const data = [registrationDate];
+
+//     const emailQuery = `SELECT * FROM users WHERE email='${email}'`;
+//     connection.query(emailQuery, (emailErr, emailResults) => {
+//         if (emailErr) return response.status(500).json({ error: "Database error" });
+//         if (emailResults.length > 0) return response.status(400).json({ error: "Email already exists" });
+
+//         const q = `INSERT INTO users(name, email, password, reg_date, login_date) VALUES('${username}', '${email}', '${password}', '${data}', '${data}')`;
+
+//         connection.query(q, (err, results)=>{
+//             if(err) return response.status(500).json({ error: "Database error" });
+//             console.log("user created");
+//             response.sendStatus(200);
+//         });
+//     });
+// });
 
 app.get('/login', (req, res)=>{
     console.log("get login");
@@ -316,17 +401,25 @@ app.post("/login", (req, res)=>{
             res.send({error: error});
         }
         console.log(result);
-        console.log(result[0]);
+        // conclsole.log(result[0]);
         if(result.length > 0){
             if(result[0].password == password){
                 const id = result[0].id;
                 const token = jwt.sign({id}, "jwtSecret", {
                     expiresIn: 300,
                 })
-                console.log(req.session.user);
+                // console.log(req.session.user);
                 req.session.user = result;
-                console.log(req.session.user);
-                res.json({loggedIn: true, user: req.session.user, auth: true, token: token});
+                // console.log(req.session.user);
+                // res.json({loggedIn: true, user: req.session.user, auth: true, token: token});
+                console.log("before cookie");
+                res.cookie("access_token", token, {
+                  httpOnly: true,
+                  secure: process.env.NODE_ENV === "production",
+                  expires: new Date(new Date().getTime()+5*60*1000),
+                  // sameSite: 'none'
+                }).json({loggedIn: true, user: req.session.user, auth: true, token: token});//json({ message: "Logged in successfully"});
+                console.log(token);
 
                 const date = new Date();
                 const registrationDate = date.toISOString().slice(0, 18);
@@ -336,6 +429,7 @@ app.post("/login", (req, res)=>{
                 connection.query(sql, data, function (err, result) {
                     if (err) throw err;
                 });
+                // return res;
             }     
         }else{
             res.json({auth: false, message: "no user exists"})

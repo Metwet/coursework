@@ -58,21 +58,16 @@ body {
 
 /* items */
 
-.item_container {
-
-}
-
-
 .cardsBlock {
     margin-top: 20px;
     padding: 10px 0;
 }
 
 .itemCard {
-    margin: 25px;
-    padding: 5px;
-    max-width: 300px; 
-    height: 600px;
+    margin: 5px;
+    padding: 10px;
+    max-width: 400px;
+    flex-grow: 1;
 }
 
 .posterCard img{
@@ -82,10 +77,6 @@ body {
 }
   
 /* collection */
-
-.collection_container {
-
-}
 
 .collection_header{
     padding-bottom: 15px;

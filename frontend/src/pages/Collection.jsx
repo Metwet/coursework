@@ -9,9 +9,10 @@ import logoDeleteTag from "../img/deletetag.svg";
 import logoChande from "../img/wheel.svg";
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import BackButton from "../common/BackButton";
+import BackButton from "../shared/components/BackButton";
+import Header from "../shared/components/Header";
 import base_url from "../shared/constants";
-import Header from "../common/Header";
+
 
 
 
@@ -99,7 +100,7 @@ const Collection = ()=> {
         });
     };
 
-    const handleAddTeg = (event) => {
+    const handleAddTag = (event) => {
         event.preventDefault();
         if (!tag) {
             return;
@@ -203,7 +204,7 @@ const Collection = ()=> {
                                         Add tag:
                                         <input className="form-control" type="text" value={tag} onChange={event => setTag(event.target.value)} />                                    
                                     </label>
-                                    <button className="btn btn-success mybtn" onClick={handleAddTeg}>+</button>
+                                    <button className="btn btn-success mybtn" onClick={handleAddTag}>+</button>
                                     <br />
                                     <div className="showTags d-flex">
                                         {tags.map((tag, index)=>(
