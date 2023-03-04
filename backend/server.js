@@ -407,13 +407,14 @@ app.post("/login", (req, res)=>{
                 const token = jwt.sign({id}, "jwtSecret", {
                     expiresIn: 300,
                 })
+                req.session.user = result;
                 console.log("before cookie");
                 res.cookie("access_token", token, {
                   httpOnly: true,
                   secure: process.env.NODE_ENV === "production",
                   expires: new Date(new Date().getTime()+5*60*1000),
                   // sameSite: 'none'
-                }).json({loggedIn: true, auth: true, token: token});//json({ message: "Logged in successfully"});
+                }).json({loggedIn: true, user: req.session.user, auth: true, token: token});//json({ message: "Logged in successfully"});
                 console.log(token);
 
                 const date = new Date();
