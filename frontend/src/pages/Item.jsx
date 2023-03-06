@@ -27,7 +27,6 @@ const Item = ()=> {
     const fetchItem = async ()=>{
         try {
             const res = await axios.get(`${base_url}/item/${id}`)
-            console.log(res.data)
             setItem(res.data[0]);
             setTitle(res.data[0].title);
             setDescription(res.data[0].description);
@@ -103,7 +102,7 @@ const Item = ()=> {
                     {tags.length > 0 && <div className="card-text  d-flex flex-row align-self-center"> Tags: {tags.map((tag, index)=>(
                         <span className="card mytag" key={index}> {tag} </span>
                     ))}</div>}
-                    {user.id === item.user_id &&<div className="btnBlock">
+                    {user.id === item.user_id && <div className="btnBlock">
                         <button type="button" className="btn btn-danger mybtn" onClick={()=>handleDelete(item)}><img src={logoDelete}></img></button>
                         <button type="button" className="btn btn-warning mybtn" onClick={()=>handleChange(item)}><img src={logoChande}></img></button>
                     </div>}

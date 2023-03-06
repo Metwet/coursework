@@ -199,7 +199,7 @@ const Collection = ()=> {
                                 </div>
                             )).reverse()}
                             </div>
-                            <div className = "col-sm-12 col-md-6 col-lg-4">
+                            {user.id === data.user_id && <div className = "col-sm-12 col-md-6 col-lg-4">
                                 <h3>Create a new item</h3>
                                 <form onSubmit={handleCreateItem}>
                                     <label className="form-label">
@@ -233,7 +233,7 @@ const Collection = ()=> {
                                         <button className="btn btn-success mybtn" type="submit">add</button>
                                     </div>
                                 </form>
-                            </div>
+                            </div>}
                         </div>
                     </div>
                 </div>

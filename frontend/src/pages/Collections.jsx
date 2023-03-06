@@ -17,6 +17,7 @@ const Collections = ()=> {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [theme, setTheme] = useState('1');
+    const [user, setUser] = useState({});
 
     const fetchAllData = async ()=>{
         try {
@@ -29,6 +30,10 @@ const Collections = ()=> {
 
     useEffect(()=>{
         fetchAllData();
+        if(localStorage.getItem("crutchLogin") !== null){
+            const showLogin = JSON.parse(localStorage.getItem("crutchLogin"));
+            setUser(showLogin)
+        }
     }, []);
     
     const handleSubmit = (event) => {
@@ -66,7 +71,7 @@ const Collections = ()=> {
                             )).reverse()}
                         </div>
                     </div>
-                    <div className="col-sm-12 col-md-6 col-lg-4 ">
+                    {user.id === data.user_id && <div className="col-sm-12 col-md-6 col-lg-4 ">
                         <h1>Create a new collection</h1>
                         <form onSubmit={handleSubmit}>
                             <label className="form-label">
@@ -92,7 +97,7 @@ const Collections = ()=> {
                                 <button className="btn btn-success mybtn" type="submit">add</button>
                             </div>                  
                         </form>
-                    </div>
+                    </div>}
                 </div>
             </div>
         </div>
