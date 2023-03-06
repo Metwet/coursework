@@ -20,7 +20,6 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Main/>}/>
-                <Route path="/collections" element={<Collections/>}/>
                 <Route path="/collections/:id" element={<Collections/>}/>
                 <Route path="/collection/:id" element={<Collection/>}/>
                 <Route path="/item/:id" element={<Item/>}/>
