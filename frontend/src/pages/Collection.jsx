@@ -34,9 +34,12 @@ const Collection = ()=> {
 
     const [items, setItems] = useState([]);
 
+    const [user, setUser] = useState({})
+
     const fetchCollection = async ()=>{
         try {
             const res = await axios.get(`${base_url}/collection/${id}`)
+            console.log(res.data);
             setData(res.data);
             setName(res.data.name);
             setDescription(res.data.description);
@@ -59,6 +62,10 @@ const Collection = ()=> {
     useEffect(()=>{    
         fetchCollection();
         fetchAllItems();
+        if(localStorage.getItem("crutchLogin") !== null){
+            const showLogin = JSON.parse(localStorage.getItem("crutchLogin"));
+            setUser(showLogin)
+        }
     }, []);
 
 
@@ -93,7 +100,8 @@ const Collection = ()=> {
 
     const handleCreateItem = (event) => {
         event.preventDefault();
-        axios.post(`${base_url}/items`, { title, descriptionItem, id, tags}).then(response => {
+        const user_id = user.id;
+        axios.post(`${base_url}/items`, { title, descriptionItem, id, tags, user_id}).then(response => {
             console.log(response.data);
             fetchAllItems();
             setTitle('')
@@ -159,24 +167,24 @@ const Collection = ()=> {
                 </div>
                 <div className="mycontainer collection_container ">
                     <div className="row collection_header">
-                        <div className="col-3 poster_space">
+                        <div className="col-sm-12 col-md-5 col-lg-3 poster_space">
                             <div className="posterCard">
                                 <img src={noPoster} className="card-img-top" alt="poster"></img>
                             </div>
                         </div>
-                        <div className="col-9 collection_about">
+                        <div className="col-sm-12 col-md-7 col-lg-9 collection_about">
                             <h1>Collection "{data.name}"</h1>
                             <p>{data.description}</p>
                             <p className="text">Theme: {data.theme}</p>
-                            <div className="btnBlock">
+                            {user.id === data.user_id && <div className="btnBlock">
                                 <button type="button" className="btn btn-danger mybtn" onClick={()=>handleDelete(data)}><img src={logoDelete}></img></button>
                                 <button type="button" className="btn btn-warning mybtn" onClick={()=>handleChange(data)}><img src={logoChande}></img></button>
-                            </div>
+                            </div>}
                         </div>
                     </div>
                     <div className="itemsBlock">
                         <div className= "row">
-                            <div className = "col-8">
+                            <div className = "col-sm-12 col-md-6 col-lg-8">
                             <h3>Items:</h3>
                             {items.map((item)=>(
                                 <div className="card itemCard d-flex justify-content-center align-items-center" key={item.id}>
@@ -191,7 +199,7 @@ const Collection = ()=> {
                                 </div>
                             )).reverse()}
                             </div>
-                            <div className = "col-4">
+                            <div className = "col-sm-12 col-md-6 col-lg-4">
                                 <h3>Create a new item</h3>
                                 <form onSubmit={handleCreateItem}>
                                     <label className="form-label">

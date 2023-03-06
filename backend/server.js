@@ -145,7 +145,7 @@ app.get("/collections/:id", (req, res)=> {
 
 app.get('/collection/:id', (req, res) => {
     const id = req.params.id;
-    const query = `SELECT collections.id, collections.name, collections.description, collections.theme_id, themes.theme 
+    const query = `SELECT collections.id, collections.name, collections.description, collections.theme_id, collections.user_id, themes.theme 
     FROM collections
     INNER JOIN themes ON collections.theme_id = themes.id
     WHERE collections.id = ${id};`
@@ -277,6 +277,7 @@ app.get("/item/:id", (req, res)=> {
                 description: result.description,
                 name: result.name,
                 tags: tagsName,
+                user_id: result.user_id
               };
               resolve(item);
             });
@@ -288,6 +289,7 @@ app.get("/item/:id", (req, res)=> {
             description: result.description,
             name: result.name,
             tags: [],
+            user_id: result.user_id
           };
           return Promise.resolve(item);
         }
@@ -306,10 +308,10 @@ app.get("/item/:id", (req, res)=> {
 app.post("/items", (request, response) => {
     if (!request.body) return response.sendStatus(400);
     try {
-      const { title, descriptionItem, id, tags } = request.body;
+      const { title, descriptionItem, id, tags, user_id } = request.body;
       const tagIds = [];
   
-      const q = `INSERT INTO items (title, description, collection_id, tag_ids) VALUES('${title}', '${descriptionItem}', '${id}', '[]')`;
+      const q = `INSERT INTO items (title, description, collection_id, tag_ids, user_id) VALUES('${title}', '${descriptionItem}', '${id}', '[]', ${user_id})`;
       connection.query(q, (err, results) => {
         if (err) {
           console.error(err);

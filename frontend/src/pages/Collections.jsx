@@ -49,7 +49,7 @@ const Collections = ()=> {
                     <BackButton />
                 </div>
                 <div className="row mycontainer">
-                    <div className="col-6">
+                    <div className="col-sm-12 col-md-6 col-lg-8">
                         <div className="collectionsBlock">
                             <h2>My collections:</h2>
                             {data && data.map((data)=>(
@@ -66,7 +66,7 @@ const Collections = ()=> {
                             )).reverse()}
                         </div>
                     </div>
-                    <div className="col-6">
+                    <div className="col-sm-12 col-md-6 col-lg-4 ">
                         <h1>Create a new collection</h1>
                         <form onSubmit={handleSubmit}>
                             <label className="form-label">

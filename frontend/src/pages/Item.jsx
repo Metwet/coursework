@@ -22,6 +22,8 @@ const Item = ()=> {
     const [description, setDescription] = useState('');
     const [tags, setTags] = useState([]);
 
+    const [user, setUser] = useState({});
+
     const fetchItem = async ()=>{
         try {
             const res = await axios.get(`${base_url}/item/${id}`)
@@ -37,6 +39,10 @@ const Item = ()=> {
 
     useEffect(()=>{
         fetchItem();
+        if(localStorage.getItem("crutchLogin") !== null){
+            const showLogin = JSON.parse(localStorage.getItem("crutchLogin"));
+            setUser(showLogin)
+        }
     }, []);
 
 
@@ -94,14 +100,13 @@ const Item = ()=> {
                     <h1>Item "{item.title}"</h1>
                     <p>{item.description}</p>
                     <p>Collection is "{item.name}"</p>
-                    {console.log(item)}
                     {tags.length > 0 && <div className="card-text  d-flex flex-row align-self-center"> Tags: {tags.map((tag, index)=>(
                         <span className="card mytag" key={index}> {tag} </span>
                     ))}</div>}
-                    <div className="btnBlock">
+                    {user.id === item.user_id &&<div className="btnBlock">
                         <button type="button" className="btn btn-danger mybtn" onClick={()=>handleDelete(item)}><img src={logoDelete}></img></button>
                         <button type="button" className="btn btn-warning mybtn" onClick={()=>handleChange(item)}><img src={logoChande}></img></button>
-                    </div>
+                    </div>}
                 </div>
             </div>
         )
