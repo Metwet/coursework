@@ -73,7 +73,7 @@ const Collections = ()=> {
                             )).reverse()}
                         </div>
                     </div>
-                    {user.id === userId && <div className="col-sm-12 col-md-6 col-lg-4 ">
+                    { <div className="col-sm-12 col-md-6 col-lg-4 ">
                         <h1>Create a new collection</h1>
                         <form onSubmit={handleSubmit}>
                             <label className="form-label">
