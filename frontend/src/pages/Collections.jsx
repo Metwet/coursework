@@ -1,11 +1,9 @@
 import React from "react";
 import axios from "axios";
 import { useState } from "react";
-import {useNavigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 import { useEffect } from "react";
 import noPoster from "../img/noposter.png";
-import logoDelete from "../img/delete.svg";
-import logoChande from "../img/wheel.svg";
 import { Link } from 'react-router-dom';
 import base_url from "../shared/constants";
 import BackButton from "../shared/components/BackButton";
@@ -13,6 +11,7 @@ import Header from "../shared/components/Header";
 
 
 const Collections = ()=> {
+    const { id } = useParams();
     const [data, setData] = useState([])
 
     const [title, setTitle] = useState('');
@@ -22,7 +21,7 @@ const Collections = ()=> {
     useEffect(()=>{
         const fetchAllData = async ()=>{
             try {
-                const res = await axios.get(`${base_url}/collections`)
+                const res = await axios.get(`${base_url}/collections/${id}`)
                 setData(res.data);
             } catch(err) {
                 console.log(err);

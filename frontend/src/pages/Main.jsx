@@ -51,7 +51,6 @@ const Main = ()=> {
         if(localStorage.getItem("crutchLogin") !== null){
             const showLogin = JSON.parse(localStorage.getItem("crutchLogin"));
             setUser(showLogin)
-            console.log(showLogin)
         }
     }, []);
 

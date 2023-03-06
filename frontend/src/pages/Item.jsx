@@ -20,6 +20,7 @@ const Item = ()=> {
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [tags, setTags] = useState([]);
 
     const fetchItem = async ()=>{
         try {
@@ -28,6 +29,7 @@ const Item = ()=> {
             setItem(res.data[0]);
             setTitle(res.data[0].title);
             setDescription(res.data[0].description);
+            setTags(res.data[0].tags);
         } catch(err) {
             console.log(err);
         }
@@ -92,9 +94,10 @@ const Item = ()=> {
                     <h1>Item "{item.title}"</h1>
                     <p>{item.description}</p>
                     <p>Collection is "{item.name}"</p>
-                        {item.tags.length > 0 && <div className="card-text  d-flex flex-row align-self-center"> Tags: {item.tags.map((tag, index)=>(
-                            <span className="card mytag" key={index}> {tag} </span>
-                        ))}</div>}
+                    {console.log(item)}
+                    {tags.length > 0 && <div className="card-text  d-flex flex-row align-self-center"> Tags: {tags.map((tag, index)=>(
+                        <span className="card mytag" key={index}> {tag} </span>
+                    ))}</div>}
                     <div className="btnBlock">
                         <button type="button" className="btn btn-danger mybtn" onClick={()=>handleDelete(item)}><img src={logoDelete}></img></button>
                         <button type="button" className="btn btn-warning mybtn" onClick={()=>handleChange(item)}><img src={logoChande}></img></button>

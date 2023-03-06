@@ -36,7 +36,7 @@ const Collection = ()=> {
 
     const fetchCollection = async ()=>{
         try {
-            const res = await axios.get(`${base_url}/collections/${id}`)
+            const res = await axios.get(`${base_url}/collection/${id}`)
             setData(res.data);
             setName(res.data.name);
             setDescription(res.data.description);
