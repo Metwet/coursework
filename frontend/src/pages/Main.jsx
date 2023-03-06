@@ -20,7 +20,7 @@ const Main = ()=> {
     const fetchUser = async ()=> {
         try {
             const res = await axios.get(`${base_url}/authorization`)
-            setUser(res.data[0]);
+            //setUser(res.data[0]);
         } catch(err) {
             console.log(err);
         }
@@ -48,8 +48,9 @@ const Main = ()=> {
         fetchUser();
         fetchAllCollections();
         fetchAllItems();
-        if(localStorage.getItem("crutchLogin") === null){
+        if(localStorage.getItem("crutchLogin") !== null){
             const showLogin = JSON.parse(localStorage.getItem("crutchLogin"));
+            setUser(showLogin)
             console.log(showLogin)
         }
     }, []);
@@ -62,8 +63,7 @@ const Main = ()=> {
             <div className="mycontainer">
                 <div className="d-flex justify-content-between">
                     {user.name && <h2>Hello {user.name}</h2>}
-                    <button type="submit" className="btn btn-primary mybtn ms-auto" onClick={()=>{navigate("/collections")}}>My collections</button>
-                </div>
+                    {localStorage.getItem("crutchLogin") !== null && <button type="submit" className="btn btn-primary mybtn ms-auto" onClick={()=>{navigate(`/collections/${user.id}`)}}>My collections</button>}                </div>
                 <div className="items_main_block">
                     <h2>All items:</h2>
                     <div className="row">
