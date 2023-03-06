@@ -132,7 +132,7 @@ app.get("/collections", (req, res)=> {
 
 app.get("/collections/:id", (req, res)=> {
     const id = req.params.id;
-    const q = `SELECT collections.id, collections.name, collections.description, themes.theme 
+    const q = `SELECT collections.id, collections.name, collections.description, collections.user_id, themes.theme 
     FROM collections
     INNER JOIN themes ON collections.theme_id = themes.id
     INNER JOIN users ON collections.user_id = users.id
@@ -177,13 +177,18 @@ app.post("/collections", (request, response)=> {
 });
 
 app.delete("/collections/:id", (req, res)=>{
-    const userId = req.params.id;
-    const q = "DELETE FROM collections WHERE id = ?";
-    connection.query(q, [userId], (err, data) => {
-        if(err) return res.json(err);
-        return res.json("Row has been deleted successfully!");
-    });
+  const collectionId = req.params.id;
+  const deleteItemsQuery = "DELETE FROM items WHERE collection_id = ?";
+  connection.query(deleteItemsQuery, [collectionId], (err, itemsData) => {
+      if (err) return res.json(err);
+      const deleteCollectionQuery = "DELETE FROM collections WHERE id = ?";
+      connection.query(deleteCollectionQuery, [collectionId], (err, collectionData) => {
+          if (err) return res.json(err);
+          return res.json("Collection and associated items have been deleted successfully!");
+      });
+  });
 })
+
 
 app.put('/collections/:id', (req, res) => {
     const id = req.params.id;

@@ -18,11 +18,13 @@ const Collections = ()=> {
     const [description, setDescription] = useState('');
     const [theme, setTheme] = useState('1');
     const [user, setUser] = useState({});
+    const [userId, setUserId] = useState();
 
     const fetchAllData = async ()=>{
         try {
             const res = await axios.get(`${base_url}/collections/${id}`)
             setData(res.data);
+            setUserId(res.data[0].user_id);
         } catch(err) {
             console.log(err);
         }
@@ -71,7 +73,7 @@ const Collections = ()=> {
                             )).reverse()}
                         </div>
                     </div>
-                    {user.id === data.user_id && <div className="col-sm-12 col-md-6 col-lg-4 ">
+                    {user.id === userId && <div className="col-sm-12 col-md-6 col-lg-4 ">
                         <h1>Create a new collection</h1>
                         <form onSubmit={handleSubmit}>
                             <label className="form-label">
