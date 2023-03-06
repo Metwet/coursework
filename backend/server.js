@@ -70,11 +70,52 @@ app.get("/authorization", authorization, (req, res)=> {
 
 // main page
 app.get("/main/items", (req, res)=> {
-    const q = "SELECT * FROM items"
-    connection.query(q, (err,data)=>{
-        if(err) return res.json(err)
-        return res.json(data)
-    })
+  const q = `SELECT items.*, collections.name 
+    FROM items 
+    INNER JOIN collections ON items.collection_id = collections.id;`;
+  connection.query(q, (error, results) => {
+  if (error) {
+  console.log(error);
+  return res.status(500).json({ error: "Internal Server Error" });
+  }
+  const promises = results.map((result) => {
+  const tagIds = JSON.parse(result.tag_ids);
+  if (tagIds) {
+  const query = `SELECT tagname FROM tags WHERE id IN (?)`;
+  return new Promise((resolve, reject) => {
+  connection.query(query, [tagIds], (err, results) => {
+  if (err) reject(err);
+  const tagsName = results.map((tag) => tag.tagname);
+  const item = {
+    id: result.id,
+    title: result.title,
+    description: result.description,
+    name: result.name,
+    tags: tagsName,
+  };
+  resolve(item);
+  });
+  });
+  } else {
+  const item = {
+  id: result.id,
+  title: result.title,
+  description: result.description,
+  name: result.name,
+  tags: [],
+  };
+  return Promise.resolve(item);
+  }
+  });
+  Promise.all(promises)
+  .then((items) => {
+  return res.json(items);
+  })
+  .catch((err) => {
+  console.log(err);
+  return res.status(500).json({ error: "Internal Server Error" });
+  });
+  });
 })
 
 // CRUD collections
@@ -147,26 +188,56 @@ app.put('/collections/:id', (req, res) => {
 
 // CRUD items
 
-app.get("/items/:id", (req, res)=> {
-    const id = req.params.id;
-    const q = `SELECT items.*, collections.name, tags.tagname
-    FROM items
-    INNER JOIN collections ON items.collection_id = collections.id
-    LEFT JOIN tags ON items.id = tags.item_id
-    WHERE items.collection_id =  ${id};`
-    connection.query(q, (err,data)=>{
-        if(err) return res.json(err);
-        const itemsWithTags = data.reduce((acc, item) => {
-          if (!acc[item.id]) {
-            acc[item.id] = { ...item, tagname: [item.tagname] };
-          } else {
-            acc[item.id].tagname.push(item.tagname);
-          }
-          return acc;
-        }, {});
-        return res.json(Object.values(itemsWithTags));
-    })
-})
+app.get("/items/:id", (req, res) => {
+  const id = req.params.id;
+  const q = `SELECT items.*, collections.name 
+             FROM items 
+             INNER JOIN collections ON items.collection_id = collections.id
+             WHERE items.collection_id = ${id};`;
+  connection.query(q, (error, results) => {
+    if (error) {
+      console.log(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    const promises = results.map((result) => {
+      const tagIds = JSON.parse(result.tag_ids);
+      if (tagIds) {
+        const query = `SELECT tagname FROM tags WHERE id IN (?)`;
+        return new Promise((resolve, reject) => {
+          connection.query(query, [tagIds], (err, results) => {
+            if (err) reject(err);
+            const tagsName = results.map((tag) => tag.tagname);
+            const item = {
+              id: result.id,
+              title: result.title,
+              description: result.description,
+              name: result.name,
+              tags: tagsName,
+            };
+            resolve(item);
+          });
+        });
+      } else {
+        const item = {
+          id: result.id,
+          title: result.title,
+          description: result.description,
+          name: result.name,
+          tags: [],
+        };
+        return Promise.resolve(item);
+      }
+    });
+    Promise.all(promises)
+      .then((items) => {
+        return res.json(items);
+      })
+      .catch((err) => {
+        console.log(err);
+        return res.status(500).json({ error: "Internal Server Error" });
+      });
+  });
+});
 
 app.get("/item/:id", (req, res)=> {
     const id = req.params.id;
@@ -174,10 +245,49 @@ app.get("/item/:id", (req, res)=> {
     FROM items
     INNER JOIN collections ON items.collection_id = collections.id
     WHERE items.id =  ${id};`
-    connection.query(q, (err,data)=>{
-        if(err) return res.json(err)
-        return res.json(data)
-    })
+    connection.query(q, (error, results) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
+      const promises = results.map((result) => {
+        const tagIds = JSON.parse(result.tag_ids);
+        if (tagIds) {
+          const query = `SELECT tagname FROM tags WHERE id IN (?)`;
+          return new Promise((resolve, reject) => {
+            connection.query(query, [tagIds], (err, results) => {
+              if (err) reject(err);
+              const tagsName = results.map((tag) => tag.tagname);
+              const item = {
+                id: result.id,
+                title: result.title,
+                description: result.description,
+                name: result.name,
+                tags: tagsName,
+              };
+              resolve(item);
+            });
+          });
+        } else {
+          const item = {
+            id: result.id,
+            title: result.title,
+            description: result.description,
+            name: result.name,
+            tags: [],
+          };
+          return Promise.resolve(item);
+        }
+      });
+      Promise.all(promises)
+        .then((items) => {
+          return res.json(items);
+        })
+        .catch((err) => {
+          console.log(err);
+          return res.status(500).json({ error: "Internal Server Error" });
+        });
+    });
 })
 
 app.post("/items", (request, response) => {
@@ -338,32 +448,6 @@ app.post("/signup", (req, res) => {
       });
     });
   });
-  
-
-// app.post("/signup", function (request, response) {
-//     if (!request.body || !request.body.username || !request.body.email || !request.body.password) {
-//         return response.status(400).json({ error: "Username, email, and password fields are required" });
-//     }
-
-//     const { username, email, password } = request.body;
-//     const date = new Date();
-//     const registrationDate = date.toISOString().slice(0, 18);
-//     const data = [registrationDate];
-
-//     const emailQuery = `SELECT * FROM users WHERE email='${email}'`;
-//     connection.query(emailQuery, (emailErr, emailResults) => {
-//         if (emailErr) return response.status(500).json({ error: "Database error" });
-//         if (emailResults.length > 0) return response.status(400).json({ error: "Email already exists" });
-
-//         const q = `INSERT INTO users(name, email, password, reg_date, login_date) VALUES('${username}', '${email}', '${password}', '${data}', '${data}')`;
-
-//         connection.query(q, (err, results)=>{
-//             if(err) return response.status(500).json({ error: "Database error" });
-//             console.log("user created");
-//             response.sendStatus(200);
-//         });
-//     });
-// });
 
 app.get('/login', (req, res)=>{
     console.log("get login");
@@ -414,7 +498,7 @@ app.post("/login", (req, res)=>{
                   secure: process.env.NODE_ENV === "production",
                   expires: new Date(new Date().getTime()+5*60*1000),
                   // sameSite: 'none'
-                }).json({loggedIn: true, user: req.session.user, auth: true, token: token});//json({ message: "Logged in successfully"});
+                }).json({loggedIn: true, user: req.session.user, auth: true, token: token});
                 console.log(token);
 
                 const date = new Date();
@@ -425,7 +509,6 @@ app.post("/login", (req, res)=>{
                 connection.query(sql, data, function (err, result) {
                     if (err) throw err;
                 });
-                // return res;
             }     
         }else{
             res.json({auth: false, message: "no user exists"})

@@ -49,6 +49,7 @@ const Collection = ()=> {
     const fetchAllItems = async ()=>{
         try {
             const res = await axios.get(`${base_url}/items/${id}`)
+            console.log(res.data);
             setItems(res.data);
         } catch(err) {
             console.log(err);
@@ -95,6 +96,9 @@ const Collection = ()=> {
         axios.post(`${base_url}/items`, { title, descriptionItem, id, tags}).then(response => {
             console.log(response.data);
             fetchAllItems();
+            setTitle('')
+            setDescriptionItem('')
+            setTags([])
         }).catch(error => {
             console.log(error);
         });
@@ -181,8 +185,8 @@ const Collection = ()=> {
                                     </Link>
                                     <p className="card-text">Description: {item.description}</p>
                                     <p className="card-text"> Collection is "{item.name}"</p>
-                                    {item.tagname[0] && <div className="card-text  d-flex flex-row align-self-center"> Tags: {item.tagname.map((tag)=>(
-                                        <span className="card mytag"> {tag} </span>
+                                    {item.tags.length > 0 && <div className="card-text  d-flex flex-row align-self-center"> Tags: {item.tags.map((tag, index)=>(
+                                        <span className="card mytag" key={index}> {tag} </span>
                                     ))}</div>}
                                 </div>
                             )).reverse()}

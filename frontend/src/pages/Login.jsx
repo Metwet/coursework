@@ -31,6 +31,8 @@ const Login = ()=> {
             } else {
                 setBanStatus(false);
                 setWrongData("")
+                console.log(response.data.user[0])
+                localStorage.setItem("crutchLogin", JSON.stringify(response.data.user[0]));
                 navigate("/");
             }
         })

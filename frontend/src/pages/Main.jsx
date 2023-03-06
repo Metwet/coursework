@@ -20,7 +20,6 @@ const Main = ()=> {
     const fetchUser = async ()=> {
         try {
             const res = await axios.get(`${base_url}/authorization`)
-            console.log(res.data[0]);
             setUser(res.data[0]);
         } catch(err) {
             console.log(err);
@@ -49,6 +48,10 @@ const Main = ()=> {
         fetchUser();
         fetchAllCollections();
         fetchAllItems();
+        if(localStorage.getItem("crutchLogin") === null){
+            const showLogin = JSON.parse(localStorage.getItem("crutchLogin"));
+            console.log(showLogin)
+        }
     }, []);
 
     return (
@@ -58,7 +61,7 @@ const Main = ()=> {
             </div>
             <div className="mycontainer">
                 <div className="d-flex justify-content-between">
-                    <h2>Hello {user.name}</h2>
+                    {user.name && <h2>Hello {user.name}</h2>}
                     <button type="submit" className="btn btn-primary mybtn ms-auto" onClick={()=>{navigate("/collections")}}>My collections</button>
                 </div>
                 <div className="items_main_block">
@@ -71,7 +74,10 @@ const Main = ()=> {
                                             <h5 className="card-title">{item.title}</h5>
                                     </Link>
                                     <p className="card-text">Description: {item.description}</p>
-                                    <p className="card-text">Tags: {item.tag_ids}</p>
+                                    <p className="card-text"> Collection is "{item.name}"</p>
+                                    {item.tags.length > 0 && <div className="card-text  d-flex flex-row align-self-center"> Tags: {item.tags.map((tag, index)=>(
+                                        <span className="card mytag" key={index}> {tag} </span>
+                                    ))}</div>}
                                 </div>
                             </div>                  
                         )).reverse()}
