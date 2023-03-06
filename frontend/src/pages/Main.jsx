@@ -61,7 +61,7 @@ const Main = ()=> {
             </div>
             <div className="mycontainer">
                 <div className="d-flex justify-content-between">
-                    {user.name && <h2>Hello {user.name}</h2>}
+                    {user.name && <h2>Hello {user.name}!</h2>}
                     {localStorage.getItem("crutchLogin") !== null && <button type="submit" className="btn btn-primary mybtn ms-auto" onClick={()=>{navigate(`/collections/${user.id}`)}}>My collections</button>}                </div>
                 <div className="items_main_block">
                     <h2>All items:</h2>

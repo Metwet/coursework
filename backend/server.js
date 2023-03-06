@@ -130,7 +130,20 @@ app.get("/collections", (req, res)=> {
     })
 })
 
-app.get('/collections/:id', (req, res) => {
+app.get("/collections/:id", (req, res)=> {
+    const id = req.params.id;
+    const q = `SELECT collections.id, collections.name, collections.description, themes.theme 
+    FROM collections
+    INNER JOIN themes ON collections.theme_id = themes.id
+    INNER JOIN users ON collections.user_id = users.id
+    WHERE collections.user_id = ${id};`
+    connection.query(q, (err,data)=>{
+        if(err) return res.json(err)
+        return res.json(data)
+    })
+})
+
+app.get('/collection/:id', (req, res) => {
     const id = req.params.id;
     const query = `SELECT collections.id, collections.name, collections.description, collections.theme_id, themes.theme 
     FROM collections
@@ -151,7 +164,7 @@ app.post("/collections", (request, response)=> {
     if(!request.body) return response.sendStatus(400);
     console.log(request.body);
     try {
-        const q = `INSERT INTO collections (name, description, theme_id) VALUES('${request.body.title}', '${request.body.description}', '${request.body.theme}')`;
+        const q = `INSERT INTO collections (name, description, theme_id, user_id) VALUES('${request.body.title}', '${request.body.description}', '${request.body.theme}', '${request.body.id}')`;
         connection.query(q, (err, results)=>{
             if(err) return results.json(err);
             response.json({message: 'Данные отправлены'})

@@ -18,23 +18,24 @@ const Collections = ()=> {
     const [description, setDescription] = useState('');
     const [theme, setTheme] = useState('1');
 
-    useEffect(()=>{
-        const fetchAllData = async ()=>{
-            try {
-                const res = await axios.get(`${base_url}/collections/${id}`)
-                setData(res.data);
-            } catch(err) {
-                console.log(err);
-            }
+    const fetchAllData = async ()=>{
+        try {
+            const res = await axios.get(`${base_url}/collections/${id}`)
+            setData(res.data);
+        } catch(err) {
+            console.log(err);
         }
+    }
+
+    useEffect(()=>{
         fetchAllData();
     }, []);
     
     const handleSubmit = (event) => {
         event.preventDefault();
-        axios.post(`${base_url}/collections`, { title, description, theme }).then(response => {
+        axios.post(`${base_url}/collections`, { title, description, theme, id }).then(response => {
             console.log(response.data);
-            window.location.reload();
+            fetchAllData();
         }).catch(error => {
             console.log(error);
         });

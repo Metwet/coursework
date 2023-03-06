@@ -35,6 +35,7 @@ const Signup = ()=> {
             if(!response.data.auth){
             } else {
                 console.log(response.data)
+                localStorage.setItem("crutchLogin", JSON.stringify(response.data.user[0]));
                 navigate("/");
             }
         });
