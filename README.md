@@ -15,7 +15,7 @@ The project has not been completed yet and I have some difficulties with the dep
   <img src="https://i.ibb.co/3T98Bvs/image.png" alt="main_page" border="0">
 </p>
 
-### main page
+### sign up page
 <p align = "center">
-  <img src="https://i.ibb.co/3T98Bvs/image.png" alt="main_page" border="0">
+  <img src="https://i.ibb.co/FDYTpx1/image.png" alt="signup_page" border="0">
 </p>
