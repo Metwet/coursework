@@ -80,7 +80,7 @@ app.get("/main/items", (req, res)=> {
   }
   const promises = results.map((result) => {
   const tagIds = JSON.parse(result.tag_ids);
-  if (tagIds) {
+  if (tagIds.length) {
   const query = `SELECT tagname FROM tags WHERE id IN (?)`;
   return new Promise((resolve, reject) => {
   connection.query(query, [tagIds], (err, results) => {
@@ -219,11 +219,13 @@ app.get("/items/:id", (req, res) => {
     }
     const promises = results.map((result) => {
       const tagIds = JSON.parse(result.tag_ids);
-      if (tagIds) {
+      console.log(tagIds.length)
+      if (tagIds.length) {
         const query = `SELECT tagname FROM tags WHERE id IN (?)`;
         return new Promise((resolve, reject) => {
           connection.query(query, [tagIds], (err, results) => {
             if (err) reject(err);
+            if(!results) console.log("here we go again")
             const tagsName = results.map((tag) => tag.tagname);
             const item = {
               id: result.id,
@@ -270,7 +272,7 @@ app.get("/item/:id", (req, res)=> {
       }
       const promises = results.map((result) => {
         const tagIds = JSON.parse(result.tag_ids);
-        if (tagIds) {
+        if (tagIds.length) {
           const query = `SELECT tagname FROM tags WHERE id IN (?)`;
           return new Promise((resolve, reject) => {
             connection.query(query, [tagIds], (err, results) => {
