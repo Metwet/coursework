@@ -15,7 +15,22 @@ The project has not been completed yet and I have some difficulties with the dep
   <img src="https://i.ibb.co/3T98Bvs/image.png" alt="main_page" border="0">
 </p>
 
-### sign up page
+### signup page
 <p align = "center">
   <img src="https://i.ibb.co/FDYTpx1/image.png" alt="signup_page" border="0">
+</p>
+
+### login page
+<p align = "center">
+  <img src="https://i.ibb.co/JBvLC2k/image.png" alt="image" border="0">
+</p>
+
+### collections page
+<p align = "center">
+  <img src="https://i.ibb.co/L1gyRwH/image.png" alt="image" border="0">
+</p>
+
+### items page
+<p align = "center">
+  <img src="https://i.ibb.co/tXZHJ4R/image.png" alt="image" border="0">
 </p>
